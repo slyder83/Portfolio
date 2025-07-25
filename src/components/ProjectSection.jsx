@@ -1,25 +1,37 @@
 import { ArrowRight, ExternalLink, Github } from "lucide-react"
 
 const projects = [
-    {
-        id: 1,
-        title: "Sistema de reservas para restaurante",
-        description: "Aplicación web responsive para gestionar reservas online, con panel de administración y notificaciones por correo electrónico.",
-        image: "/projects/tfg-reservas.png",
-        tags: ["PHP", "MySQL", "JavaScript", "CSS", "HTML"],
-        demoUrl: "#",
-        githubUrl: "https://github.com/slyder83/ProyectoFinGrado"
-    },
-    {
-        id: 2,
-        title: "Gestor de vehículos para autoescuelas",
-        description: "Aplicación para controlar vehículos, partes de accidentes y seguros usando almacenamiento como Dropbox sin base de datos.",
-        image: "/projects/autoescuela.png",
-        tags: ["JavaScript", "JSON", "Electron", "HTML", "CSS"],
-        demoUrl: "#",
-        githubUrl: "https://github.com/slyder83/Autoescuela"
-    },
-]
+  {
+    id: 1,
+    title: "Sistema de reservas para restaurante",
+    description:
+      "Aplicación web responsive para gestionar reservas online, con panel de administración y notificaciones por correo electrónico.",
+    image: "/projects/tfg-reservas.png",
+    tags: ["PHP", "MySQL", "JavaScript", "CSS", "HTML"],
+    demoUrl: "#",
+    githubUrl: "https://github.com/slyder83/ProyectoFinGrado",
+  },
+  {
+    id: 2,
+    title: "Gestor de vehículos para autoescuelas",
+    description:
+      "Aplicación para controlar vehículos, partes de accidentes y seguros usando almacenamiento como Dropbox sin base de datos.",
+    image: "/projects/autoescuela.png",
+    tags: ["JavaScript", "JSON", "Electron", "HTML", "CSS"],
+    demoUrl: "#",
+    githubUrl: "https://github.com/slyder83/Autoescuela",
+  },
+  {
+    id: 3,
+    title: "Efemérides de Videojuegos | Retro Gaming",
+    description:
+      "Descubre las efemérides más destacadas del mundo de los videojuegos. Cada día, un vistazo a la historia del gaming con un toque retro.",
+    image: "/projects/efemerides-videojuegos.png",
+    tags: ["JavaScript", "TypeScript", "React", "Next.js", "Tailwind CSS", "PostCSS", "Node.js", "Supabase"],
+    demoUrl: "https://efemerides-videojuegos.vercel.app/",
+    githubUrl: "https://github.com/slyder83/efemerides-videojuegos",
+  },
+];
 
 export const ProjectSection = () => {
     return (
