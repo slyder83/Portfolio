@@ -45,7 +45,13 @@ export const ProjectSection = () => {
                     {projects.map((project) => (
                         <div key={project.id} className="w-full sm:w-[47%] lg:w-[30%] group bg-card rounded-lg overflow-hidden shadow-xs card-hover">
                             <div className="h-48 overflow-hidden">
-                                <img src={project.image} alt={`Preview of ${project.title}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                <img 
+                                    src={project.image} 
+                                    alt={`Proyecto: ${project.title} — Tecnologías: ${project.tags.join(", ")}`} 
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                                    loading="lazy"
+                                    decoding="async"
+                                />
                             </div>
 
                             <div className="p-6">
