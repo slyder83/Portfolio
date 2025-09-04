@@ -32,7 +32,7 @@ export const Navbar = () => {
     };
 
     return (
-        <nav className={cn(
+        <nav aria-label="Navegación principal" className={cn(
             "fixed w-full z-50 transition-all duration-300", // Aumentado z-index
             isScrolled ? "py-3 bg-background/80 backdrop-blur-md shadow-xs" : "py-5"
         )}>
