@@ -31,6 +31,16 @@ const projects = [
     demoUrl: "https://efemerides-videojuegos.vercel.app/",
     githubUrl: "https://github.com/slyder83/efemerides-videojuegos",
   },
+  {
+    id: 4,
+    title: "Buscador de Clima por Ciudad",
+    description:
+      "Aplicación web sencilla donde puedes buscar cualquier ciudad o pueblo y obtener los datos meteorológicos actuales usando JavaScript, HTML y CSS puro, sin frameworks.",
+    image: "/projects/fem-weather.png",
+    tags: ["JavaScript", "HTML", "CSS", "API"],
+    demoUrl: "https://fem-weather.vercel.app/",
+    githubUrl: "https://github.com/slyder83/fem-weather",
+  },
 ];
 
 export const ProjectSection = () => {
