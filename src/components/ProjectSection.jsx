@@ -41,6 +41,16 @@ const projects = [
     demoUrl: "https://fem-weather.vercel.app/",
     githubUrl: "https://github.com/slyder83/fem-weather",
   },
+  {
+    id: 5,
+    title: "Victory Royale Timer - Cuenta Regresiva Fortnite",
+    description:
+      "Web ligera y moderna que muestra cuánto falta para la nueva temporada de Fortnite. Diseño gaming, rápido y con cuenta atrás precisa.",
+    image: "/projects/victory-royale-timer.png",
+    tags: ["JavaScript", "HTML", "CSS"],
+    demoUrl: "https://victory-royale-timer.vercel.app/",
+    githubUrl: "",
+  },
 ];
 
 export const ProjectSection = () => {
