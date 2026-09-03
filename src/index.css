@@ -10,6 +10,14 @@
   --color-primary-foreground: hsl(var(--primary-foreground));
 
   --color-card: hsl(var(--card));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
 
   --animate-float: float 6s ease-in-out infinite;
   --animate-pulse-subtle: pulse-subtle 4s ease-in-out infinite;
@@ -19,6 +27,16 @@
   --animate-fade-in-delay-3: fade-in 0.7s ease-out 0.6s forwards;
   --animate-fade-in-delay-4: fade-in 0.7s ease-out 0.8s forwards;
   --animate-meteor: meteor 5s linear infinite;
+  --animate-grow: grow 1.5s ease-out;
+
+  @keyframes grow {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
 
   @keyframes float {
     0%,
@@ -74,6 +92,14 @@
     --primary-foreground: 140 40% 95%;
 
     --border: 145 40% 75%;
+    --secondary: 145 30% 90%;
+    --secondary-foreground: 150 30% 20%;
+    --muted: 145 30% 92%;
+    --muted-foreground: 150 20% 40%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 140 40% 95%;
+    --input: 145 30% 75%;
+    --ring: 145 60% 45%;
 
     --button-text: 140 50% 100%;
   }
@@ -88,6 +114,14 @@
     --primary-foreground: 113 31% 91%;
 
     --border: 150 30% 25%;
+    --secondary: 150 30% 12%;
+    --secondary-foreground: 150 40% 90%;
+    --muted: 150 30% 13%;
+    --muted-foreground: 150 20% 65%;
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 150 40% 90%;
+    --input: 150 25% 30%;
+    --ring: 150 65% 65%;
 
     --button-text: 150 47% 8%;
   }
@@ -134,6 +168,13 @@
 @utility text-glow {
   @apply relative;
   text-shadow: 0 0 10px rgba(72, 187, 120, 0.7);
+}
+
+@utility text-gradient {
+  background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary) / 0.6));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 @utility card-hover {

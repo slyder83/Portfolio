@@ -7,6 +7,8 @@ const projects = [
     description:
       "Aplicación web responsive para gestionar reservas online, con panel de administración y notificaciones por correo electrónico.",
     image: "/projects/tfg-reservas.png",
+    imageWidth: 2514,
+    imageHeight: 2158,
     tags: ["PHP", "MySQL", "JavaScript", "CSS", "HTML"],
     demoUrl: "#",
     githubUrl: "https://github.com/slyder83/ProyectoFinGrado",
@@ -17,6 +19,8 @@ const projects = [
     description:
       "Aplicación para controlar vehículos, partes de accidentes y seguros usando almacenamiento como Dropbox sin base de datos.",
     image: "/projects/autoescuela.png",
+    imageWidth: 2384,
+    imageHeight: 1586,
     tags: ["JavaScript", "JSON", "Electron", "HTML", "CSS"],
     demoUrl: "#",
     githubUrl: "https://github.com/slyder83/Autoescuela",
@@ -27,6 +31,8 @@ const projects = [
     description:
       "Descubre las efemérides más destacadas del mundo de los videojuegos. Cada día, un vistazo a la historia del gaming con un toque retro.",
     image: "/projects/efemerides-videojuegos.png",
+    imageWidth: 2006,
+    imageHeight: 1610,
     tags: ["JavaScript", "TypeScript", "React", "Next.js", "Tailwind CSS", "PostCSS", "Node.js", "Supabase"],
     demoUrl: "https://efemerides-videojuegos.vercel.app/",
     githubUrl: "https://github.com/slyder83/efemerides-videojuegos",
@@ -37,6 +43,8 @@ const projects = [
     description:
       "Aplicación web sencilla donde puedes buscar cualquier ciudad o pueblo y obtener los datos meteorológicos actuales usando JavaScript, HTML y CSS puro, sin frameworks.",
     image: "/projects/fem-weather.png",
+    imageWidth: 1326,
+    imageHeight: 825,
     tags: ["JavaScript", "HTML", "CSS", "API"],
     demoUrl: "https://fem-weather.vercel.app/",
     githubUrl: "https://github.com/slyder83/fem-weather",
@@ -47,6 +55,8 @@ const projects = [
     description:
       "Web ligera y moderna que muestra cuánto falta para la nueva temporada de Fortnite. Diseño gaming, rápido y con cuenta atrás precisa.",
     image: "/projects/victory-royale-timer.png",
+    imageWidth: 3242,
+    imageHeight: 2638,
     tags: ["JavaScript", "HTML", "CSS"],
     demoUrl: "https://victory-royale-timer.vercel.app/",
     githubUrl: "",
@@ -68,6 +78,8 @@ export const ProjectSection = () => {
                                 <img 
                                     src={project.image} 
                                     alt={`Proyecto: ${project.title} — Tecnologías: ${project.tags.join(", ")}`} 
+                                    width={project.imageWidth}
+                                    height={project.imageHeight}
                                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
                                     loading="lazy"
                                     decoding="async"
@@ -77,7 +89,7 @@ export const ProjectSection = () => {
                             <div className="p-6">
                                 <div className="flex flex-wrap gap-2 justify-between mb-4">
                                     {project.tags.map((tag) => (
-                                        <span className="px-2 py-1 text-xs font-medium border rounded-full bg-primary/30 text-secondary-foreground">{tag}</span>
+                                      <span key={`${project.id}-${tag}`} className="px-2 py-1 text-xs font-medium border rounded-full bg-primary/30 text-secondary-foreground">{tag}</span>
                                     ))}
                                 </div>
                                 <h3 className="text-xl font-semibold mb-1">{project.title}</h3>
