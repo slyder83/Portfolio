@@ -19,6 +19,8 @@ Para retomar la sesión desde donde lo dejamos:
    consulta cambios.md para el contexto»).
 
 4. **Estado actual / punto de retomada:**
+   - **Rama de git:** `chore/portfolio-improvements` (commit `7cf197a`). Todo el trabajo
+     está **commiteado** en esa rama (no en `main`). El working tree quedó limpio.
    - Hechas: corrección de fallos visuales/funcionales; ThemeToggle en Home (limpieza);
      imágenes con dimensiones; skip navigation link; header semántico.
    - **Pendiente (lista de mejoras de la auditoría):**
@@ -33,9 +35,10 @@ Para retomar la sesión desde donde lo dejamos:
 
 ---
 
-Nota: los archivos modificados y sin seguimiento están persistidos en el disco (no se
-pierden al apagar el PC). Si quieres una copia aún más segura, se puede hacer un
-`git commit`, pero hasta ahora no lo hemos hecho por tu indicación.
+**Nota final de esta sesión:** todo está guardado y commiteado en la rama
+`chore/portfolio-improvements` (no en `main`). El commit NO se ha subido a GitHub
+(aún no lo has pedido). Si mañana o más adelante quieres publicarlo, habrá que hacer
+`git push origin chore/portfolio-improvements` y, si procede, abrir un PR hacia `main`.
 
 ## Últimos cambios
 
