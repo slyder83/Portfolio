@@ -19,7 +19,7 @@ Para retomar la sesión desde donde lo dejamos:
    consulta cambios.md para el contexto»).
 
 4. **Estado actual / punto de retomada:**
-   - **Rama de git:** `chore/portfolio-improvements` (commit `7cf197a`). Todo el trabajo
+   - **Rama de git:** `chore/portfolio-improvements` (commit `9e68e8d`). Todo el trabajo
      está **commiteado** en esa rama (no en `main`). El working tree quedó limpio.
    - Hechas: corrección de fallos visuales/funcionales; ThemeToggle en Home (limpieza);
       imágenes con dimensiones; skip navigation link; header semántico; enlace roto
