@@ -26,12 +26,12 @@ Para retomar la sesión desde donde lo dejamos:
       contraste WCAG; og:image; imágenes a WebP.
    - **Pendiente (fase 2 — nuevas áreas de mejora):**
       a) Verificar la web en producción (browser-testing) tras el deploy.
-      b) Seguridad: revisar 7 vulnerabilidades de `npm audit` + formulario EmailJS.
-      c) Rendimiento: Core Web Vitals, tamaño del bundle JS, cache, lazy loading.
-      d) Tests: añadir pruebas (TDD / browser-testing).
-      e) CI/CD: pipeline con lint + build automático en cada push/PR.
-      f) Observabilidad: analytics, logging de errores, monitorización.
-      g) Revisión de código multi-eje (code-review).
+      b) Revisión de código multi-eje (code-review-and-quality).
+      c) Seguridad: revisar 7 vulnerabilidades de `npm audit` + formulario EmailJS.
+      d) Rendimiento: Core Web Vitals, tamaño del bundle JS, cache, lazy loading.
+      e) Tests: añadir pruebas (TDD / browser-testing).
+      f) CI/CD: pipeline con lint + build automático en cada push/PR.
+      g) Observabilidad: analytics, logging de errores, monitorización.
       h) Checklist de lanzamiento (shipping-and-launch).
    - Recordatorio: quedamos en **corregir fallos, no refactorizar**.
 
@@ -49,9 +49,10 @@ tree; revisar `git status` para ver qué hay sin trackear/commiteado.
 ### 04/09/2026 — Fase 2: nuevas áreas de mejora definidas
 
 Se definieron nuevas áreas de mejora a partir de las skills disponibles, más allá de
-la auditoría original (que ya está completa y desplegada): estas son la fase 2 del
-proyecto e incluyen verificación en producción, seguridad, rendimiento, tests, CI/CD,
-observabilidad y revisión de código. Pendiente de priorizar con un plan de acción.
+la auditoría original (que ya está completa y desplegada): verificación en producción,
+revisión de código, seguridad, rendimiento, tests, CI/CD, observabilidad y checklist
+de lanzamiento. Pendiente de priorizar con un plan de acción; el orden propuesto queda
+en «Estado actual».
 
 ---
 
@@ -153,12 +154,13 @@ revisar, basadas en las skills disponibles.
 
 **Áreas de mejora propuestas:**
 - Verificación de producción con navegador real (browser testing).
+- Revisión de código multi-eje (code-review-and-quality): calidad, complejidad,
+  mantenibilidad del código existente.
 - Seguridad: revisar 7 vulnerabilidades de `npm audit` + formulario/EmailJS.
 - Rendimiento: Core Web Vitals, bundle JS, cache, lazy loading.
 - Tests (TDD / browser).
 - CI/CD con lint + build automáticos.
 - Observabilidad: analytics y logging de errores.
-- Revisión multi-eje del código.
 - Checklist de lanzamiento.
 
 Pendiente de priorizar y convertir en plan de acción.
