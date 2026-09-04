@@ -29,7 +29,7 @@ Para retomar la sesión desde donde lo dejamos:
       b) ✅ Enlace roto en ContactSection — corregido (04/09/2026).
       c) ✅ Hero opacity-0 sin fallback — corregido (04/09/2026).
       d) ✅ Contraste muted-foreground — corregido (04/09/2026).
-      e) `og:image` real en vez del favicon en `index.html`.
+      e) ✅ og:image real — creado y actualizado (04/09/2026).
    - Recordatorio: quedamos en **corregir fallos, no refactorizar**.
 
 ---
@@ -42,6 +42,15 @@ Para retomar la sesión desde donde lo dejamos:
 ## Últimos cambios
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
+
+### 04/09/2026 — `og:image` real para redes sociales (SEO)
+
+El `og:image` apuntaba al `favicon.png` (icono diminuto de pestaña). Creé una imagen
+OG de 1200×630px con la paleta del proyecto usando SVG + `sharp` para la conversión a
+PNG. Actualicé los metas Open Graph, Twitter Cards y structured data. Detalle en
+«Historial detallado».
+
+---
 
 ### 04/09/2026 — Contraste `muted-foreground` en light theme (WCAG 4.5:1)
 
@@ -114,6 +123,27 @@ keyframe `grow`, toasts, dependencia del `useEffect` y `aria-hidden`.
 ---
 
 ## Historial detallado
+
+### Sesión 04/09/2026: og:image para redes sociales
+
+**Recomendación de la auditoría:** El `og:image` apuntaba a `/favicon.png`, que es el
+icono de pestaña (32×32 px). Las redes sociales necesitan una imagen de 1200×630 px
+para mostrar una preview correcta.
+
+**Archivos creados/modificados:**
+- `public/og-image.svg` — diseño vectorial con fondo verde oscuro, nombre, título y
+  tecnologías.
+- `public/og-image.png` — conversión a PNG (1200×630, ~29KB) con `sharp`.
+- `scripts/generate-og.js` — script de conversión (reutilizable con `npm run generate-og`).
+- `package.json` — añadido script `generate-og`.
+- `index.html` — actualizados los 3 metas que apuntaban al favicon:
+  - `og:image` → `/og-image.png`
+  - `twitter:image` → URL completa a `og-image.png`
+  - Structured data (`schema.org`) → URL completa a `og-image.png`
+
+Verificado con `npm run build` y `npm run lint` (sin errores).
+
+---
 
 ### Sesión 04/09/2026: Contraste muted-foreground (WCAG AA)
 
@@ -409,4 +439,9 @@ Y hay carpetas sin seguimiento de git:
 | `src/hooks/use-toast.js` | Bajar tiempo de cierre de toast y corregir dependencia del `useEffect` |
 | `src/components/StarBackground.jsx` | Añadir `aria-hidden="true"` |
 | `src/components/ContactSection.jsx` | Eliminar enlace `href="#"` roto |
+| `public/og-image.svg` | Diseño vectorial de la OG image |
+| `public/og-image.png` | Imagen OG generada (1200×630) |
+| `scripts/generate-og.js` | Script de conversión SVG→PNG |
+| `index.html` | Actualizar metas og:image, twitter:image, structured data |
+| `package.json` | Añadir script `generate-og`, devDependency `sharp` |
 | `.git/info/exclude` | Protección local contra commit de `.env` |
