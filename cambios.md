@@ -27,8 +27,7 @@ Para retomar la sesión desde donde lo dejamos:
    - **Pendiente (lista de mejoras de la auditoría):**
       a) Imágenes de proyectos a WebP/AVIF (rendimiento).
       b) ✅ Enlace roto en ContactSection — corregido (04/09/2026).
-      c) Fallo potencial: texto del Hero con `opacity-0` sin fallback si la animación
-        no carga.
+      c) ✅ Hero opacity-0 sin fallback — corregido (04/09/2026).
       d) Verificar contraste de `muted-foreground` (WCAG 4.5:1).
       e) `og:image` real en vez del favicon en `index.html`.
    - Recordatorio: quedamos en **corregir fallos, no refactorizar**.
@@ -43,6 +42,16 @@ Para retomar la sesión desde donde lo dejamos:
 ## Últimos cambios
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
+
+### 04/09/2026 — Hero: fallback para `prefers-reduced-motion` (accesibilidad)
+
+Los elementos del Hero usaban `opacity-0` y dependían de animaciones CSS para hacerse
+visibles. Si el usuario tenía reducción de movimiento o las animaciones no cargaban, el
+texto quedaba invisible. Añadí un `@media (prefers-reduced-motion: reduce)` que
+deshabilita las animaciones y muestra el contenido inmediatamente. Detalle en «Historial
+detallado».
+
+---
 
 ### 04/09/2026 — Enlace `<a href="#">` roto en ContactSection (accesibilidad)
 
@@ -97,6 +106,27 @@ keyframe `grow`, toasts, dependencia del `useEffect` y `aria-hidden`.
 ---
 
 ## Historial detallado
+
+### Sesión 04/09/2026: Hero fallback para prefers-reduced-motion
+
+**Recomendación de la auditoría:** Los elementos del Hero (`<h1>`, párrafo, botón)
+usaban `opacity-0` y dependían de animaciones CSS (`animate-fade-in-delay-*`) para
+hacerse visibles. Si el usuario tenía `prefers-reduced-motion: reduce` activado, o si
+las animaciones no cargaban por cualquier motivo, el contenido quedaba invisible.
+
+**Archivo modificado:** `src/index.css`
+
+**Qué hice:**
+- Añadí un bloque `@media (prefers-reduced-motion: reduce)` al final del archivo.
+- Dentro, deshabilito las animaciones (`animation: none !important`) y fuerzo
+  `opacity: 1 !important` en las 5 clases de animación del Hero.
+
+Esto garantiza que el contenido siempre sea visible, independientemente de las
+preferencias de movimiento del usuario.
+
+Verificado con `npm run build` y `npm run lint` (sin errores).
+
+---
 
 ### Sesión 04/09/2026: Enlace roto en ContactSection
 
