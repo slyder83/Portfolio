@@ -22,15 +22,15 @@ Para retomar la sesión desde donde lo dejamos:
    - **Rama de git:** `chore/portfolio-improvements` (commit `7cf197a`). Todo el trabajo
      está **commiteado** en esa rama (no en `main`). El working tree quedó limpio.
    - Hechas: corrección de fallos visuales/funcionales; ThemeToggle en Home (limpieza);
-     imágenes con dimensiones; skip navigation link; header semántico.
+      imágenes con dimensiones; skip navigation link; header semántico; enlace roto
+      en ContactSection.
    - **Pendiente (lista de mejoras de la auditoría):**
-     a) Imágenes de proyectos a WebP/AVIF (rendimiento).
-     b) Enlace `<a href="#">` roto en `ContactSection.jsx` (Ubicación → «Norte de
-       España») — corregirlo o eliminar el `href="#"`.
-     c) Fallo potencial: texto del Hero con `opacity-0` sin fallback si la animación
-       no carga.
-     d) Verificar contraste de `muted-foreground` (WCAG 4.5:1).
-     e) `og:image` real en vez del favicon en `index.html`.
+      a) Imágenes de proyectos a WebP/AVIF (rendimiento).
+      b) ✅ Enlace roto en ContactSection — corregido (04/09/2026).
+      c) Fallo potencial: texto del Hero con `opacity-0` sin fallback si la animación
+        no carga.
+      d) Verificar contraste de `muted-foreground` (WCAG 4.5:1).
+      e) `og:image` real en vez del favicon en `index.html`.
    - Recordatorio: quedamos en **corregir fallos, no refactorizar**.
 
 ---
@@ -43,6 +43,14 @@ Para retomar la sesión desde donde lo dejamos:
 ## Últimos cambios
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
+
+### 04/09/2026 — Enlace `<a href="#">` roto en ContactSection (accesibilidad)
+
+El enlace «Norte de España» en la sección de Ubicación usaba `href="#"`, que no lleva a
+ninguna parte y genera una navegación inesperada al tope de la página. Lo reemplacé por
+un `<span>` ya que es información estática. Detalle en «Historial detallado».
+
+---
 
 ### 03/09/2026 — Header semántico (SEO/accesibilidad)
 
@@ -89,6 +97,22 @@ keyframe `grow`, toasts, dependencia del `useEffect` y `aria-hidden`.
 ---
 
 ## Historial detallado
+
+### Sesión 04/09/2026: Enlace roto en ContactSection
+
+**Recomendación de la auditoría:** El enlace de «Ubicación» usaba `href="#"`, que genera
+una navegación inesperada al tope de la página sin aportar nada. «Norte de España» es
+información estática y no necesita ser un enlace.
+
+**Archivo modificado:** `src/components/ContactSection.jsx`
+
+**Qué hice:**
+- Reemplacé el `<a href="#" ...>` por un `<span>` con la misma clase de color.
+- Eliminé `hover:text-primary transition-colors` al no ser un elemento interactivo.
+
+Verificado con `npm run build` y `npm run lint` (sin errores).
+
+---
 
 ### Sesión 03/09/2026 (5.ª): Header semántico
 
