@@ -19,18 +19,22 @@ Para retomar la sesión desde donde lo dejamos:
    consulta cambios.md para el contexto»).
 
 4. **Estado actual / punto de retomada:**
-   - **Rama de git:** `chore/portfolio-improvements` (commit `6e78e1f`). Todo el trabajo
-     está **commiteado** en esa rama (no en `main`). El working tree quedó limpio.
-   - Hechas: corrección de fallos visuales/funcionales; ThemeToggle en Home (limpieza);
-      imágenes con dimensiones; skip navigation link; header semántico; enlace roto
-      en ContactSection.
-   - **Pendiente (lista de mejoras de la auditoría):**
-      a) ✅ Imágenes a WebP — convertidas (04/09/2026). Verificadas y PNG eliminados.
-      b) ✅ Enlace roto en ContactSection — corregido (04/09/2026).
-      c) ✅ Hero opacity-0 sin fallback — corregido (04/09/2026).
-      d) ✅ Contraste muted-foreground — corregido (04/09/2026).
-      e) ✅ og:image real — creado y actualizado (04/09/2026).
-   - Recordatorio: quedamos en **corregir fallos, no refactorizar**.
+   - **Rama de git:** `feat/phase-2-improvements` (nueva rama desde `main` tras el merge
+     del PR de fase 1). El working tree quedó limpio.
+   - **Fase 1 completada y mergeada a `main`:** corrección de fallos visuales/funcionales;
+      ThemeToggle, imágenes con dimensiones, skip navigation, header semántico, enlace
+      roto, contraste WCAG, og:image, imágenes a WebP.
+   - **Fase 2 en curso:** mejoras adicionales basadas en skills disponibles.
+   - **Tareas fase 2 (orden):**
+      a) Verificar producción tras deploy → completada (error EmailJS detectado y resuelto
+        reconectando Gmail en EmailJS; mejora de toast de error implementada).
+      b) Revisión de código multi-eje (code-review-and-quality).
+      c) Seguridad (npm audit, EmailJS).
+      d) Rendimiento (Core Web Vitals, bundle JS).
+      e) Tests (TDD / browser-testing).
+      f) CI/CD (lint + build automáticos).
+      g) Observabilidad (analytics, logging).
+      h) Checklist de lanzamiento.
 
 ---
 
@@ -42,6 +46,14 @@ Para retomar la sesión desde donde lo dejamos:
 ## Últimos cambios
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
+
+### 04/09/2026 — Toast de error del formulario con alternativa (UX)
+
+El toast de error al enviar el formulario mostraba un mensaje genérico ("inténtalo más
+tarde"). Lo cambié por uno más útil que incluye el email directo como alternativa
+("Puedes escribirme directamente a rcenegar@gmail.com"). Detalle en «Historial detallado».
+
+---
 
 ### 04/09/2026 — Imágenes de proyectos a WebP (rendimiento)
 
@@ -132,6 +144,27 @@ keyframe `grow`, toasts, dependencia del `useEffect` y `aria-hidden`.
 ---
 
 ## Historial detallado
+
+### Sesión 04/09/2026: Toast de error del formulario (fase 2)
+
+**Contexto:** Durante la verificación de producción de la fase 1, se detectó un error
+412 al enviar el formulario de contacto. La causa era que el token OAuth de Gmail en
+EmailJS había expirado (problema del lado del servicio, no del código). Se resolvió
+reconectando la cuenta Gmail en el dashboard de EmailJS.
+
+**Mejora de código:** Aun con el servicio restaurado, el toast de error mostraba un
+mensaje genérico. Lo cambié por uno más útil que incluye el email directo como
+alternativa, para que el usuario pueda contactar directamente si el servicio falla.
+
+**Archivo modificado:** `src/components/ContactSection.jsx`
+
+**Cambio:**
+- `.catch()`: de "Por favor, inténtalo de nuevo más tarde" a
+  "No se pudo enviar el mensaje. Puedes escribirme directamente a rcenegar@gmail.com"
+
+Verificado con `npm run build` y `npm run lint`.
+
+---
 
 ### Sesión 04/09/2026: Imágenes de proyectos a WebP
 
