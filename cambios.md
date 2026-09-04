@@ -38,10 +38,10 @@ Para retomar la sesión desde donde lo dejamos:
 
 ---
 
-**Nota final de esta sesión:** todo está guardado y commiteado en la rama
-`chore/portfolio-improvements` (no en `main`). El commit NO se ha subido a GitHub
-(aún no lo has pedido). Si mañana o más adelante quieres publicarlo, habrá que hacer
-`git push origin chore/portfolio-improvements` y, si procede, abrir un PR hacia `main`.
+**Nota final de esta sesión:** el trabajo de la fase 1 está mergeado en `main` y
+desplegado. La fase 2 está en curso en la rama `feat/phase-2-improvements`
+(último commit `e0c7d9f`, toast de error del formulario). Working tree limpio.
+Cuando haya más cambios de fase 2, se irán sumando y, al final, se hará PR a `main`.
 
 ## Últimos cambios
 
