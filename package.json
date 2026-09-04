@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate-og": "node scripts/generate-og.js"
+    "generate-og": "node scripts/generate-og.js",
+    "convert-projects": "node scripts/convert-projects.js"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

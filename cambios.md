@@ -25,7 +25,7 @@ Para retomar la sesión desde donde lo dejamos:
       imágenes con dimensiones; skip navigation link; header semántico; enlace roto
       en ContactSection.
    - **Pendiente (lista de mejoras de la auditoría):**
-      a) Imágenes de proyectos a WebP/AVIF (rendimiento).
+      a) ✅ Imágenes a WebP — convertidas (04/09/2026). Verificadas y PNG eliminados.
       b) ✅ Enlace roto en ContactSection — corregido (04/09/2026).
       c) ✅ Hero opacity-0 sin fallback — corregido (04/09/2026).
       d) ✅ Contraste muted-foreground — corregido (04/09/2026).
@@ -42,6 +42,15 @@ Para retomar la sesión desde donde lo dejamos:
 ## Últimos cambios
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
+
+### 04/09/2026 — Imágenes de proyectos a WebP (rendimiento)
+
+Convertí las 5 imágenes de proyectos de PNG a WebP con `sharp`, reduciendo el peso
+total cargado de ~11.5 MB a ~572 KB (un 95% menos). Actualicé las referencias en
+`ProjectSection.jsx`. Verificadas visualmente y los PNG originales eliminados.
+Detalle en «Historial detallado».
+
+---
 
 ### 04/09/2026 — `og:image` real para redes sociales (SEO)
 
@@ -123,6 +132,39 @@ keyframe `grow`, toasts, dependencia del `useEffect` y `aria-hidden`.
 ---
 
 ## Historial detallado
+
+### Sesión 04/09/2026: Imágenes de proyectos a WebP
+
+**Recomendación de la auditoría:** Las imágenes de los proyectos eran PNG pesados
+(algunos de varios MB), lo que ralentizaba la carga de la página.
+
+**Archivos creados/modificados:**
+- `public/projects/*.webp` — 5 imágenes convertidas con `sharp` (calidad 80).
+- `scripts/convert-projects.js` — script de conversión (reutilizable con `npm run
+  convert-projects`).
+- `package.json` — añadido script `convert-projects`.
+- `src/components/ProjectSection.jsx` — referencias `.png` → `.webp`.
+
+**Resultado de la conversión (calidad 80):**
+
+| Imagen | PNG | WebP | Ahorro |
+|--------|-----|------|--------|
+| tfg-reservas | 5384 KB | 266 KB | -95.1% |
+| victory-royale-timer | 3562 KB | 130 KB | -96.3% |
+| efemerides-videojuegos | 1833 KB | 114 KB | -93.8% |
+| fem-weather | 604 KB | 30 KB | -95.0% |
+| autoescuela | 145 KB | 32 KB | -78.1% |
+| **Total** | **~11.5 MB** | **~572 KB** | **-95%** |
+
+**Pendiente:** Los PNG originales se conservan en `public/projects/` a la espera de
+que contribuya verifique que los WebP se ven bien, momento en el que se borrarán.
+
+Ahora: las imágenes WebP fueron verificadas visualmente y los PNG originales ya se
+eliminaron.
+
+Verificado con `npm run build` y `npm run lint`.
+
+---
 
 ### Sesión 04/09/2026: og:image para redes sociales
 
@@ -441,7 +483,10 @@ Y hay carpetas sin seguimiento de git:
 | `src/components/ContactSection.jsx` | Eliminar enlace `href="#"` roto |
 | `public/og-image.svg` | Diseño vectorial de la OG image |
 | `public/og-image.png` | Imagen OG generada (1200×630) |
+| `public/projects/*.webp` | Imágenes de proyectos convertidas a WebP |
 | `scripts/generate-og.js` | Script de conversión SVG→PNG |
+| `scripts/convert-projects.js` | Script de conversión PNG→WebP |
+| `src/components/ProjectSection.jsx` | Ref .png → .webp |
 | `index.html` | Actualizar metas og:image, twitter:image, structured data |
 | `package.json` | Añadir script `generate-og`, devDependency `sharp` |
 | `.git/info/exclude` | Protección local contra commit de `.env` |
