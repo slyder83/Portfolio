@@ -69,7 +69,7 @@ export const ContactSection = () => {
                                 </div>
                                 <div>
                                     <h4 className="font-medium">Ubicación</h4>
-                                    <a href="#" className="text-muted-foreground hover:text-primary transition-colors">Norte de España</a>
+                                    <span className="text-muted-foreground">Norte de España</span>
                                 </div>
                             </div>
                         </div>
