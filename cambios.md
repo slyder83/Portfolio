@@ -19,29 +19,41 @@ Para retomar la sesión desde donde lo dejamos:
    consulta cambios.md para el contexto»).
 
 4. **Estado actual / punto de retomada:**
-   - **Rama de git:** `chore/portfolio-improvements` (commit `6e78e1f`). Todo el trabajo
-     está **commiteado** en esa rama (no en `main`). El working tree quedó limpio.
+   - **Rama de git:** el PR de `chore/portfolio-improvements` hacia `main` fue creado,
+      mergeado y desplegado en Vercel. Los cambios ya están en `main` y online.
    - Hechas: corrección de fallos visuales/funcionales; ThemeToggle en Home (limpieza);
-      imágenes con dimensiones; skip navigation link; header semántico; enlace roto
-      en ContactSection.
-   - **Pendiente (lista de mejoras de la auditoría):**
-      a) ✅ Imágenes a WebP — convertidas (04/09/2026). Verificadas y PNG eliminados.
-      b) ✅ Enlace roto en ContactSection — corregido (04/09/2026).
-      c) ✅ Hero opacity-0 sin fallback — corregido (04/09/2026).
-      d) ✅ Contraste muted-foreground — corregido (04/09/2026).
-      e) ✅ og:image real — creado y actualizado (04/09/2026).
+      imágenes con dimensiones; skip navigation link; header semántico; enlace roto;
+      contraste WCAG; og:image; imágenes a WebP.
+   - **Pendiente (fase 2 — nuevas áreas de mejora):**
+      a) Verificar la web en producción (browser-testing) tras el deploy.
+      b) Seguridad: revisar 7 vulnerabilidades de `npm audit` + formulario EmailJS.
+      c) Rendimiento: Core Web Vitals, tamaño del bundle JS, cache, lazy loading.
+      d) Tests: añadir pruebas (TDD / browser-testing).
+      e) CI/CD: pipeline con lint + build automático en cada push/PR.
+      f) Observabilidad: analytics, logging de errores, monitorización.
+      g) Revisión de código multi-eje (code-review).
+      h) Checklist de lanzamiento (shipping-and-launch).
    - Recordatorio: quedamos en **corregir fallos, no refactorizar**.
 
 ---
 
-**Nota final de esta sesión:** todo está guardado y commiteado en la rama
-`chore/portfolio-improvements` (no en `main`). El commit NO se ha subido a GitHub
-(aún no lo has pedido). Si mañana o más adelante quieres publicarlo, habrá que hacer
-`git push origin chore/portfolio-improvements` y, si procede, abrir un PR hacia `main`.
+**Nota final de esta sesión:** el trabajo de la fase 1 (auditoría de la web) está
+completo, mergeado en `main` y desplegado en Vercel. Queda pendiente la fase 2 con
+nuevas mejoras (ver «Estado actual»). El estado de la rama y demás está en el working
+tree; revisar `git status` para ver qué hay sin trackear/commiteado.
 
 ## Últimos cambios
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
+
+### 04/09/2026 — Fase 2: nuevas áreas de mejora definidas
+
+Se definieron nuevas áreas de mejora a partir de las skills disponibles, más allá de
+la auditoría original (que ya está completa y desplegada): estas son la fase 2 del
+proyecto e incluyen verificación en producción, seguridad, rendimiento, tests, CI/CD,
+observabilidad y revisión de código. Pendiente de priorizar con un plan de acción.
+
+---
 
 ### 04/09/2026 — Imágenes de proyectos a WebP (rendimiento)
 
@@ -132,6 +144,26 @@ keyframe `grow`, toasts, dependencia del `useEffect` y `aria-hidden`.
 ---
 
 ## Historial detallado
+
+### Sesión 04/09/2026: Fase 2 del proyecto (nuevas áreas de mejora)
+
+**Contexto:** La auditoría original (fase 1) quedó completa, mergeada en `main` y
+desplegada. Con el PR fusionado, se abrió una nueva fase con más áreas de mejora que
+revisar, basadas en las skills disponibles.
+
+**Áreas de mejora propuestas:**
+- Verificación de producción con navegador real (browser testing).
+- Seguridad: revisar 7 vulnerabilidades de `npm audit` + formulario/EmailJS.
+- Rendimiento: Core Web Vitals, bundle JS, cache, lazy loading.
+- Tests (TDD / browser).
+- CI/CD con lint + build automáticos.
+- Observabilidad: analytics y logging de errores.
+- Revisión multi-eje del código.
+- Checklist de lanzamiento.
+
+Pendiente de priorizar y convertir en plan de acción.
+
+---
 
 ### Sesión 04/09/2026: Imágenes de proyectos a WebP
 
