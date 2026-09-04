@@ -28,7 +28,7 @@ Para retomar la sesión desde donde lo dejamos:
       a) Imágenes de proyectos a WebP/AVIF (rendimiento).
       b) ✅ Enlace roto en ContactSection — corregido (04/09/2026).
       c) ✅ Hero opacity-0 sin fallback — corregido (04/09/2026).
-      d) Verificar contraste de `muted-foreground` (WCAG 4.5:1).
+      d) ✅ Contraste muted-foreground — corregido (04/09/2026).
       e) `og:image` real en vez del favicon en `index.html`.
    - Recordatorio: quedamos en **corregir fallos, no refactorizar**.
 
@@ -42,6 +42,14 @@ Para retomar la sesión desde donde lo dejamos:
 ## Últimos cambios
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
+
+### 04/09/2026 — Contraste `muted-foreground` en light theme (WCAG 4.5:1)
+
+El token `--muted-foreground` en el tema claro tenía un contraste de 4.42:1 contra el
+fondo, por debajo del mínimo WCAG AA (4.5:1). Ajusté la luminosidad de 40% a 39% para
+alcanzar 4.60:1. El tema oscuro ya pasaba (9.17:1). Detalle en «Historial detallado».
+
+---
 
 ### 04/09/2026 — Hero: fallback para `prefers-reduced-motion` (accesibilidad)
 
@@ -106,6 +114,26 @@ keyframe `grow`, toasts, dependencia del `useEffect` y `aria-hidden`.
 ---
 
 ## Historial detallado
+
+### Sesión 04/09/2026: Contraste muted-foreground (WCAG AA)
+
+**Recomendación de la auditoría:** Verificar que `text-muted-foreground` cumple el
+contraste mínimo WCAG AA (4.5:1) contra el fondo.
+
+**Archivo modificado:** `src/index.css`
+
+**Qué hice:**
+- Calculé el contraste con un script Python (HSL → RGB → luminancia relativa → ratio).
+- Light theme: `--muted-foreground: 150 20% 40%` daba **4.42:1** (FALLA).
+- Ajusté la luminosidad de 40% a 39%, resultando en **4.60:1** (PASA).
+- Dark theme: `150 20% 65%` ya daba **9.17:1** (PASA), sin cambios.
+
+El cambio es de 1% de luminosidad, imperceptible visualmente pero suficiente para
+cumplir WCAG AA.
+
+Verificado con `npm run build` y `npm run lint` (sin errores).
+
+---
 
 ### Sesión 04/09/2026: Hero fallback para prefers-reduced-motion
 
@@ -377,7 +405,8 @@ Y hay carpetas sin seguimiento de git:
 
 | Archivo | Tipo de cambio |
 |---------|----------------|
-| `src/index.css` | Añadir tokens de color, keyframe `grow`, utility `text-gradient` |
+| `src/index.css` | Tokens de color, keyframe `grow`, utility `text-gradient`, reduced-motion fallback, contraste muted-foreground |
 | `src/hooks/use-toast.js` | Bajar tiempo de cierre de toast y corregir dependencia del `useEffect` |
 | `src/components/StarBackground.jsx` | Añadir `aria-hidden="true"` |
+| `src/components/ContactSection.jsx` | Eliminar enlace `href="#"` roto |
 | `.git/info/exclude` | Protección local contra commit de `.env` |
