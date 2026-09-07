@@ -19,29 +19,106 @@ Para retomar la sesión desde donde lo dejamos:
    consulta cambios.md para el contexto»).
 
 4. **Estado actual / punto de retomada:**
-   - **Rama de git:** `feat/phase-2-remaing`. Working tree limpio, TODAS las fases de la
-      rama (2f, 2e, 2d, 2g, 2h) commiteadas y pusheadas. Lista para merge a `main`.
+   - **Rama de git:** `feat/phase-2-remaing` **mergeada a `main`** (commit `2263e66`,
+      07/09/2026) y **eliminada** (local y remota). `main` = rama activa y única.
+   - **Fases de la rama completadas:** f) CI/CD · e) Tests · d) Rendimiento ·
+      g) Observabilidad · h) Checklist de lanzamiento → todo mergeado y validado.
    - **Refactorización completa (C2–C8):** mergeada desde `refactor/code-quality` a `main`
       (commit `172668a`). C1 (TypeScript) descartada por decisión del usuario.
    - **Auditoría de ciberseguridad completada y mergeada** (07/09/2026).
-   - **Tareas pendientes (nueva rama `feat/phase-2-remaing`, por orden de prioridad):**
-      f) CI/CD → **completada** (workflow verificado en GitHub Actions)
-      e) Tests → **completada** (9 unit + 13 E2E, CI verde)
-      d) Rendimiento → **completada** (lazy-loading del contacto: 310 kB → 274 kB)
-      g) Observabilidad → **completada** (Vercel Analytics + Speed Insights)
-      h) Checklist de lanzamiento → **completada** (revisado abajo; pendientes solo 2 acciones del usuario en el dashboard de Vercel)
+   - **Situación del lanzamiento:** producción pendiente de **2 acciones manuales del
+      usuario en el dashboard de Vercel** (Web Analytics + Speed Insights) — ver
+      «PENDIENTE DEL USUARIO» más abajo. El deploy de producción ya se disparó con el
+      nuevo código (que incluye analytics listos para activar).
+
+5. **PENDIENTE DEL USUARIO — Dashboard de Vercel (instrucciones paso a paso):**
+
+   > Los cambios de código ya están desplegados (merge a `main` → deploy automático de Vercel).
+   > Lo que falta es **solo activar features en el dashboard**, no tocar código.
+
+   **Paso 1 — Activar Web Analytics (visitas):**
+   1. Abre https://vercel.com/dashboard → entra en el proyecto **Portfolio**.
+   2. En el menú lateral, clic en **Analytics**.
+   3. Clic en **Enable** (Web Analytics).
+
+   **Paso 2 — Activar Speed Insights (rendimiento real / Core Web Vitals de usuarios):**
+   1. En el mismo proyecto, clic en **Speed Insights** (menú lateral).
+   2. Clic en **Enable** (es **gratis** en todos los planes; incluye el *Real Experience
+      Score*). El histórico completo (Speed Insights Plus) es de pago y opcional.
+
+   **Paso 3 — Redeploy (importante tras activar Analytics):**
+   1. Al habilitar, Vercel añade rutas internas (`/_vercel/insights/*` y
+      `/_vercel/speed-insights/*`) que solo existen **tras un nuevo despliegue**.
+   2. Ve a **Deployments** → pulsa `⋮` en el último deploy (el más reciente) → **Redeploy**.
+   3. Espera a que termine (~30 s).
+
+   **Paso 4 — Verificar que llegaron datos (opcional):**
+   1. Visita https://portfolio-five-steel-52.vercel.app/ una vez.
+   2. Vuelve a **Analytics** y **Speed Insights** en el dashboard: a las pocas horas/1-2 días
+      verás las primeras visitas y métricas. (En el plan Hobby, Analytics retiene **14 días**.)
+
+   **Paso 5 — EmailJS (solo si el formulario fallara en prod):**
+   1. Proyecto → **Settings → Environment Variables**.
+   2. Confirmar que existen con valores reales:
+      `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID`, `VITE_EMAILJS_PUBLIC_KEY`.
+      (Casi con toda seguridad ya están: el form funcionó en producción en sesiones previas.)
+
+   **Estados posibles tras hacerlo:** ✅ completado · ⏳ pendiente · ❌ no funciona (si algo
+   falla, avisar al asistente en la próxima sesión).
+
+6. **PARA EL ASISTENTE — cómo iniciar la próxima sesión:**
+   - El usuario me dirá «continúa desde cambios.md». Yo hago:
+     1. `cd <proyecto>` y `git status` + `git log --oneline -5` (confirmar rama `main` limpia).
+     2. **Primero pregunto al usuario** si ya hizo el «PENDIENTE DEL USUARIO» de arriba
+        (Analytics + Speed Insights + redeploy). Si dice que sí, verificar que llegaron datos:
+        no se puede leer el dashboard sin acceso, así que basta con confirmar que el sitio
+        carga y, si el usuario lo autoriza, comprobar que el script de analytics se sirve
+        (`curl -s -o /dev/null -w "%{http_code}" https://portfolio-five-steel-52.vercel.app/_vercel/insights/script.js`
+        → esperar `200`).
+     3. **Verificar producción post-lanzamiento:** headers de seguridad con `curl -sI` (los 5
+        + HSTS), Lighthouse ya medido (100). Si hay regresión, reabrir el checklist.
+     4. **Trabajo futuro opcional pendiente** (por si el usuario pide más):
+        - Refuerzo server-side del formulario en el dashboard de EmailJS (**Spam Protection**:
+          Turnstile/reCAPTCHA o allowlist de dominios) — recomendación de la auditoría de
+          seguridad que sigue abierta.
+        - Sentry/error tracking en producción (descartado por el usuario, reabrir si lo pide).
+        - Análisis de Speed Insights tras ~1 semana de visitas reales (RUM), y optimizar si
+          aparece algo fuera de "Good".
+   - **Convenciones del proyecto:** responder en español; NO commitear sin que el usuario lo
+      pida explícitamente; no añadir comentarios al código salvo petición; Prettier
+      `tabWidth:4, semi:false, singleQuote:false`; `npm run lint|format:check|test|test:e2e`
+      en cada cambio; documentar todo en `cambios.md`.
 
 ---
 
-**Nota final de esta sesión:** con esta fase se cierra la rama `feat/phase-2-remaing`.
-Las 5 fases pendientes (CI/CD, tests, rendimiento, observabilidad y checklist de
-lanzamiento) están completadas y validadas. Pendiente del usuario: habilitar Web
-Analytics + Speed Insights en el dashboard de Vercel tras el merge y confirmar que las
-variables `VITE_EMAILJS_*` ya están configuradas en Vercel.
+**Nota de cierre de la sesión (07/09/2026):** rama `feat/phase-2-remaing` completada,
+mergeada a `main` y eliminada. Queda únicamente la activación manual en el dashboard de
+Vercel descrita arriba. El proyecto está en estado de lanzamiento: CI verde, tests verdes,
+Lighthouse 100, cabeceras de seguridad en producción, analytics listos para activar.
 
 ## Últimos cambios
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
+
+### 07/09/2026 — Merge a `main` de la rama `feat/phase-2-remaing`
+
+La rama completó los 5 hitos de la fase 2 (CI/CD, tests, rendimiento, observabilidad y
+checklist de lanzamiento). CI en verde en todos los commits de la rama.
+
+- **Merge:** commit `2263e66` en `main` (`git merge --no-ff`) y pusheado (172668a..2263e66).
+- **Rama eliminada** local y remota (tras el merge, `main` es la única rama activa).
+- **Deploy:** al push a `main`, Vercel desplegó producción con el nuevo código (lazy-loading
+  del contacto, analytics libres para activar, vercel.json con CSP actualizada).
+- **Pendiente del usuario:** Web Analytics + Speed Insights en el dashboard de Vercel
+  (instrucciones paso a paso en «PENDIENTE DEL USUARIO» arriba).
+- **Comandos usados (para seguimiento):**
+  ```bash
+  git checkout main && git pull origin main
+  git merge --no-ff feat/phase-2-remaing -m "merge: fase 2 completa (...)"
+  git push origin main
+  git branch -d feat/phase-2-remaing
+  git push origin --delete feat/phase-2-remaing
+  ```
 
 ### 07/09/2026 — Fase 2h: checklist de lanzamiento en `feat/phase-2-remaing`
 
