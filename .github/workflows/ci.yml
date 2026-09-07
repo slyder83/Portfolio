@@ -33,9 +33,36 @@ jobs:
       - name: Build de producción (Vite)
         run: npm run build
 
+      - name: Tests unitarios (Vitest)
+        run: npm test
+
       - name: Subir artefacto de build
         uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist
           if-no-files-found: error
+
+  e2e:
+    name: Tests E2E (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Instalar Chromium de Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Ejecutar tests E2E
+        run: npx playwright test

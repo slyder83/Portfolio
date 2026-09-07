@@ -26,7 +26,8 @@ Para retomar la sesión desde donde lo dejamos:
    - **Auditoría de ciberseguridad completada y mergeada** (07/09/2026).
    - **Tareas pendientes (nueva rama `feat/phase-2-remaing`, por orden de prioridad):**
       f) CI/CD (lint + build automáticos) → **completada** (workflow verificado en GitHub Actions)
-      e) Tests (TDD / browser-testing) → pendiente
+      e) Tests (TDD / browser-testing) → **en curso**
+      d) Rendimiento (Core Web Vitals, bundle JS) → pendiente
       d) Rendimiento (Core Web Vitals, bundle JS) → pendiente
       g) Observabilidad (analytics, logging) → pendiente
       h) Checklist de lanzamiento → pendiente
@@ -42,6 +43,33 @@ empezando por CI/CD.
 ## Últimos cambios
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
+
+### 07/09/2026 — Fase 2e: tests (unit + E2E) en `feat/phase-2-remaing`
+
+Pirámide de tests según TDD (RED → GREEN → REFACTOR).
+
+**Unitarios (Vitest 5, compatible con Vite 8):**
+- Extraída la validación del formulario de `ContactSection.jsx` a `src/lib/validation.js`
+  (función pura `validateContact` + constantes `NAME_MIN/MAX`, `EMAIL_MAX`, `MESSAGE_MIN/MAX`)
+- `src/lib/validation.test.js` con 9 casos (válido, trim, nombre corto/largo, email inválido/
+  vacío, mensaje corto/exacto/largo) → 9/9 ✅
+- `ContactSection.jsx` ahora usa `validateContact` y `noValidate` (la validación nativa del
+  navegador bloqueaba el submit antes que nuestros toasts en español)
+
+**E2E (Playwright, `tests/`):**
+- `navigation.spec.js`: home con todas las secciones, links del navbar, 404
+- `contact.spec.js`: toasts de validación (nombre/email/mensaje), `maxLength` del DOM,
+  cooldown 30s (con `page.route` interceptando `api.emailjs.com`)
+- `features.spec.js`: theme toggle, filtros de skills (`aria-pressed`), `progressbar`,
+  `rel="noopener noreferrer"` en externos, 0 errores de consola
+- 13/13 ✅
+
+**Config:** `playwright.config.js` (dev server autolanzado en :5199, env dummy para EmailJS),
+`vitest.config.js` (solo `src/**/*.test.js`), scripts `test`, `test:watch`, `test:e2e` en
+package.json, `noopener` reutilizado. ESLint ahora incluye globals de node (playwright.config).
+
+**CI (`ci.yml`):** job `quality` ampliado con tests unitarios; nuevo job `e2e` con
+`playwright install --with-deps chromium`.
 
 ### 07/09/2026 — Fase 2f: CI/CD en GitHub Actions en `feat/phase-2-remaing`
 
