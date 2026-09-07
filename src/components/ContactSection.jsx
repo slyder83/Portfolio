@@ -30,7 +30,7 @@ export const ContactSection = () => {
             .catch(() => {
                 toast({
                     title: "Error al enviar",
-                    description: "Por favor, inténtalo de nuevo más tarde.",
+                    description: "No se pudo enviar el mensaje. Puedes escribirme directamente a rcenegar@gmail.com",
                     variant: "destructive"
                 })
             })

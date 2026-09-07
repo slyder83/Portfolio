@@ -19,29 +19,110 @@ Para retomar la sesión desde donde lo dejamos:
    consulta cambios.md para el contexto»).
 
 4. **Estado actual / punto de retomada:**
-   - **Rama de git:** `chore/portfolio-improvements` (commit `6e78e1f`). Todo el trabajo
-     está **commiteado** en esa rama (no en `main`). El working tree quedó limpio.
-   - Hechas: corrección de fallos visuales/funcionales; ThemeToggle en Home (limpieza);
-      imágenes con dimensiones; skip navigation link; header semántico; enlace roto
-      en ContactSection.
-   - **Pendiente (lista de mejoras de la auditoría):**
-      a) ✅ Imágenes a WebP — convertidas (04/09/2026). Verificadas y PNG eliminados.
-      b) ✅ Enlace roto en ContactSection — corregido (04/09/2026).
-      c) ✅ Hero opacity-0 sin fallback — corregido (04/09/2026).
-      d) ✅ Contraste muted-foreground — corregido (04/09/2026).
-      e) ✅ og:image real — creado y actualizado (04/09/2026).
-   - Recordatorio: quedamos en **corregir fallos, no refactorizar**.
+   - **Rama de git:** `feat/phase-2-improvements` (nueva rama desde `main` tras el merge
+     del PR de fase 1). El working tree quedó limpio.
+   - **Fase 1 completada y mergeada a `main`:** corrección de fallos visuales/funcionales;
+      ThemeToggle, imágenes con dimensiones, skip navigation, header semántico, enlace
+      roto, contraste WCAG, og:image, imágenes a WebP.
+   - **Fase 2 en curso:** mejoras adicionales basadas en skills disponibles.
+   - **Tareas fase 2 (orden):**
+   a) Verificar producción tras deploy → completada (error EmailJS detectado y resuelto
+         reconectando Gmail en EmailJS; mejora de toast de error implementada).
+      b) Revisión de código multi-eje (code-review-and-quality) → completada.
+      c) Seguridad (npm audit, EmailJS) → completada (0 vulnerabilidades, revisados secrets y XSS).
+      d) Rendimiento (Core Web Vitals, bundle JS).
+      e) Tests (TDD / browser-testing).
+      f) CI/CD (lint + build automáticos).
+      g) Observabilidad (analytics, logging).
+      h) Checklist de lanzamiento.
 
 ---
 
-**Nota final de esta sesión:** todo está guardado y commiteado en la rama
-`chore/portfolio-improvements` (no en `main`). El commit NO se ha subido a GitHub
-(aún no lo has pedido). Si mañana o más adelante quieres publicarlo, habrá que hacer
-`git push origin chore/portfolio-improvements` y, si procede, abrir un PR hacia `main`.
+**Nota final de esta sesión:** el trabajo de la fase 1 está mergeado en `main` y
+desplegado. La fase 2 está en curso en la rama `feat/phase-2-improvements`.
+Completadas: a) verificación producción, b) revisión de código, c) seguridad
+(0 vulnerabilidades tras `npm audit fix`). Working tree con cambios sin commitear
+(revisión de código + seguridad).
 
 ## Últimos cambios
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
+
+### 07/09/2026 — Fix animación meteoros (StarBackground)
+
+El usuario reportó que los meteoros aparecían **estáticos/parados** al cargar y empezaban
+a moverse una a una, con sensación de "chapuza".
+
+**Causa raíz:** la revisión de código anterior cambió `delay` (propiedad CSS inválida,
+ignorada → efectivamente 0s) a `animationDelay` (válida). Eso activó el `delay` aleatorio
+de hasta 15s quedando en los datos, por lo que los meteoros quedaban **visibles y parados**
+durante el delay (el keyframe empezaba en `opacity: 1`).
+
+**Solución (efecto natural de meteorito):**
+1. `src/index.css` — keyframe `meteor` ahora arranca en `opacity: 0` (fade in) y termina
+   en `opacity: 0` (fade out); `--animate-meteor` añade `animation-fill-mode: backwards`
+   para que el meteorito esté **invisible durante el delay** (nunca una línea parada).
+2. `StarBackground.jsx` — delays distribuidos uniformemente `(i/4)*5` = 0, 1.25, 2.5, 3.75s
+   para que siempre haya un meteorito cruzando (sin huecos muertos).
+
+Resultado: los meteoritos "entran" gradualmente y cruzan de forma continua desde el primer
+instante, sin verse nunca parados.
+
+---
+
+### 07/09/2026 — Auditoría de seguridad (fase 2)
+
+Auditoría de seguridad completa. Resultado: el proyecto queda en buen estado.
+
+**Hallazgos y acciones:**
+
+| # | Severidad | Hallazgo | Acción |
+|---|-----------|----------|--------|
+| 1 | **Alta (dev-only)** | 7 vulnerabilidades npm (4 altas, 2 moderadas, 1 baja), todas en devDependencies de eslint (plugin-kit, humanfs, ajv, brace-expansion, flatted, js-yaml, minimatch) | `npm audit fix` → **0 vulnerabilidades** |
+| 2 | Info | `VITE_EMAILJS_PUBLIC_KEY` está en el bundle `.js` (visible en `dist/assets`). | Correcto por diseño: la public key de EmailJS no es un secreto; la protección está en el dashboard (dominios permitidos + rate limiting). No es un fallo. |
+| 3 | OK | `.env` está en `.gitignore` (línea 27) y no rastreado por git. Existe `.env.example`. | Sin acción. |
+| 4 | OK | Sin `dangerouslySetInnerHTML`/`innerHTML` en todo el código fuente. | Sin XSS. |
+| 5 | OK | Enlaces externos usan `rel="noopener noreferrer"` con `target="_blank"`. | Sin riesgo de tabnabbing. |
+| 6 | OK | Formulario con `required` + manejo de errores con toast. | Sin acción. |
+
+**Pendiente opcional:** añadir `vercel.json` con security headers (CSP, X-Content-Type-Options, etc.).
+
+---
+
+### 07/09/2026 — Revisión de código multi-eje (fase 2)
+
+Revisión completa del código fuente del portfolio siguiendo el skill
+`code-review-and-quality`. Se revisaron 5 ejes: corrección, legibilidad,
+arquitectura, seguridad y rendimiento. Build y lint pasan sin errores. npm audit
+muestra 7 vulnerabilidades (todas en devDependencies de eslint).
+
+**Hallazgos corregidos:**
+
+| # | Severidad | Archivo | Problema |
+|---|-----------|---------|----------|
+| 1 | **Requerido** | `StarBackground.jsx` | `delay` en inline style no es una propiedad CSS válida; los meteoros no tenían delay. Corregido a `animationDelay`. |
+| 2 | **Requerido** | `NotFound.jsx` | Texto en inglés ("Go back home") en sitio 100% en español. Traducido. |
+| 3 | **Nit** | `ProjectSection.jsx` | `demoUrl: "#"` es semánticamente incorrecto (parece enlace roto). Cambiado a `null`. |
+| 4 | **Opcional** | `SkillsSection.jsx` | `key={key}` usa índice del array en vez de `skill.name`. Mejorado para estabilidad. |
+
+**Hallazgos informativos (sin corrección necesaria):**
+
+- **Seguridad:** `VITE_EMAILJS_PUBLIC_KEY` se expone en el bundle (diseño de EmailJS, no es un fallo). La rate limiting se gestiona en el dashboard de EmailJS.
+- **Rendimiento:** `StarBackground` genera ~200+ elementos DOM en pantalla 1080p. Aceptable para un portfolio, pero a monitorizar.
+- **Rendimiento:** El resize listener de `StarBackground` no tiene throttle. Menor impacto en un portfolio estático.
+- **Arquitectura:** Los datos de `projects` están hardcodeados en el componente. Correcto para un portfolio personal; moverlos a un archivo de datos si crece.
+
+Detalle completo más abajo en «Historial detallado».
+
+---
+
+### 04/09/2026 — Toast de error del formulario con alternativa (UX)
+
+El toast de error al enviar el formulario mostraba un mensaje genérico ("inténtalo más
+tarde"). Lo cambié por uno más útil que incluye el email directo como alternativa
+("Puedes escribirme directamente a rcenegar@gmail.com"). Detalle en «Historial detallado».
+
+---
 
 ### 04/09/2026 — Imágenes de proyectos a WebP (rendimiento)
 
@@ -132,6 +213,93 @@ keyframe `grow`, toasts, dependencia del `useEffect` y `aria-hidden`.
 ---
 
 ## Historial detallado
+
+### Sesión 07/09/2026: Revisión de código multi-eje (fase 2)
+
+**Contexto:** Revisión del código fuente completo del portfolio siguiendo el skill
+`code-review-and-quality`. Se revisaron todos los archivos `.jsx`, `.js`, `.css` y
+de configuración del proyecto.
+
+**Eje 1 — Corrección:**
+
+1. **StarBackground.jsx:77** — `delay: meteor.delay` en inline style no es una
+   propiedad CSS válida. Los meteoros tenían un `delay` random generado (línea 50)
+   pero nunca se aplicaba porque `delay` no existe en CSS. Resultado: todos los
+   meteoros aparecían al mismo tiempo en vez de estar escalonados.
+   → Corregido a `animationDelay: meteor.delay + "s"`.
+
+2. **NotFound.jsx:19-20** — El texto del 404 estaba en inglés ("Oops, the page
+   you're looking for doesn't exist." y "Go back home") mientras que todo el resto
+   del sitio está en español.
+   → Traducido al español.
+
+3. **ProjectSection.jsx:13** — `demoUrl: "#"` para proyectos sin demo. Aunque el
+   código oculta el enlace cuando `demoUrl === "#"`, un `href="#"` es
+   semánticamente un enlace que lleva al tope de la página (problema que ya se
+   corrigió en ContactSection en fase 1).
+   → Cambiado a `null` para mayor claridad semántica.
+
+**Eje 2 — Legibilidad:**
+
+4. **SkillsSection.jsx:56** — `key={key}` usa el índice del array como key de React.
+   Como la lista se filtra por categoría, los índices cambian y React puede
+   reutilizar componentes incorrectamente.
+   → Cambiado a `key={skill.name}` (único y estable).
+
+**Eje 3 — Arquitectura:**
+
+- El código sigue un patrón consistente: componentes funcionales, hooks de React,
+  utilidades de shadcn/ui. Sin problemas estructurales.
+- Los datos de `projects` están hardcodeados en `ProjectSection.jsx`. Correcto para
+  un portfolio personal con 5 proyectos. Si creciera, mover a un archivo de datos.
+
+**Eje 4 — Seguridad:**
+
+- `VITE_EMAILJS_PUBLIC_KEY` se expone en el bundle del cliente. Esto es por diseño
+  de EmailJS (la clave pública está pensada para uso client-side). La rate limiting
+  se gestiona en el dashboard de EmailJS.
+- `.env` está correctamente en `.gitignore`.
+- No se encontraron inyecciones, XSS, ni secrets en código.
+
+**Eje 5 — Rendimiento:**
+
+- `StarBackground` genera `(innerWidth * innerHeight) / 10000` elementos estrella
+  (~200 en pantalla 1080p). Cada uno es un `<div>` con clase CSS. Aceptable para
+  un portfolio, pero a monitorizar en dispositivos móviles de gama baja.
+- El `resize` listener de `StarBackground` no tiene throttle. Cada pixel de resize
+  regenera todas las estrellas. Impacto menor en uso normal.
+- Imágenes de proyectos usan `loading="lazy"` y `decoding="async"` (bueno).
+- Las animaciones del Hero usan `prefers-reduced-motion` fallback (ya corregido en
+  fase 1).
+
+**npm audit:** 7 vulnerabilidades (1 low, 2 moderate, 4 high), todas en
+devDependencies de eslint/plugins. No afectan a producción. Se pueden resolver con
+`npm audit fix`.
+
+**Verificación:** `npm run build` y `npm run lint` pasan sin errores.
+
+---
+
+### Sesión 04/09/2026: Toast de error del formulario (fase 2)
+
+**Contexto:** Durante la verificación de producción de la fase 1, se detectó un error
+412 al enviar el formulario de contacto. La causa era que el token OAuth de Gmail en
+EmailJS había expirado (problema del lado del servicio, no del código). Se resolvió
+reconectando la cuenta Gmail en el dashboard de EmailJS.
+
+**Mejora de código:** Aun con el servicio restaurado, el toast de error mostraba un
+mensaje genérico. Lo cambié por uno más útil que incluye el email directo como
+alternativa, para que el usuario pueda contactar directamente si el servicio falla.
+
+**Archivo modificado:** `src/components/ContactSection.jsx`
+
+**Cambio:**
+- `.catch()`: de "Por favor, inténtalo de nuevo más tarde" a
+  "No se pudo enviar el mensaje. Puedes escribirme directamente a rcenegar@gmail.com"
+
+Verificado con `npm run build` y `npm run lint`.
+
+---
 
 ### Sesión 04/09/2026: Imágenes de proyectos a WebP
 
