@@ -19,17 +19,12 @@ Para retomar la sesión desde donde lo dejamos:
    consulta cambios.md para el contexto»).
 
 4. **Estado actual / punto de retomada:**
-   - **Rama de git:** `feat/phase-2-improvements` (nueva rama desde `main` tras el merge
-     del PR de fase 1). El working tree quedó limpio.
-   - **Fase 1 completada y mergeada a `main`:** corrección de fallos visuales/funcionales;
-      ThemeToggle, imágenes con dimensiones, skip navigation, header semántico, enlace
-      roto, contraste WCAG, og:image, imágenes a WebP.
-   - **Fase 2 en curso:** mejoras adicionales basadas en skills disponibles.
-   - **Tareas fase 2 (orden):**
-   a) Verificar producción tras deploy → completada (error EmailJS detectado y resuelto
-         reconectando Gmail en EmailJS; mejora de toast de error implementada).
-      b) Revisión de código multi-eje (code-review-and-quality) → completada.
-      c) Seguridad (npm audit, EmailJS) → completada (0 vulnerabilidades, revisados secrets y XSS).
+   - **Rama de git:** `refactor/code-quality`. Working tree con cambios sin commitear
+      (auditoría ciberseguridad + vercel.json + mejoras formulario).
+   - **Refactorización completa (C2–C8):** fases 1-8 todas pusheadas en `refactor/code-quality`
+      (commits `07fb828`–`95a86c1`). C1 (TypeScript) descartada por decisión del usuario.
+   - **Auditoría de ciberseguridad completada** (07/09/2026).
+   - **Tareas pendientes de `cambios.md`:**
       d) Rendimiento (Core Web Vitals, bundle JS).
       e) Tests (TDD / browser-testing).
       f) CI/CD (lint + build automáticos).
@@ -38,15 +33,258 @@ Para retomar la sesión desde donde lo dejamos:
 
 ---
 
-**Nota final de esta sesión:** el trabajo de la fase 1 está mergeado en `main` y
-desplegado. La fase 2 está en curso en la rama `feat/phase-2-improvements`.
-Completadas: a) verificación producción, b) revisión de código, c) seguridad
-(0 vulnerabilidades tras `npm audit fix`). Working tree con cambios sin commitear
-(revisión de código + seguridad).
+**Nota final de esta sesión:** refactorización C2-C8 completada y pusheada en
+`refactor/code-quality`. C1 (TypeScript) descartada. Auditoría de ciberseguridad
+completada con remediación (sendForm → send, maxLength, cooldown 30s, vercel.json
+con 5 security headers). Pendientes de fase 2: rendimiento, tests, CI/CD,
+observabilidad, checklist.
 
 ## Últimos cambios
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
+
+### 07/09/2026 — Refactorización Fase 8 (Documentación — C5) en `refactor/code-quality`
+
+Auditoría (C5): README desactualizado y documentación de `context/` con referencias a una
+`lib/portfolioData.js` que nunca existió, a la utility `cosmic-button` ya eliminada, a "Vite 7"
+y a un dark mode "pendiente" que ya está publicado.
+
+**Cambios en `README.md`:**
+- Reescrito: stack real (React 19, Vite 8, Tailwind v4, React Router v7, Radix+CVA, EmailJS),
+  características actuales (dark mode, fondo animado, `Button`), estructura `src/`, scripts
+  (`format`/`format:check`), tabla de scripts y configuración (`site.js`, `data/`)
+
+**Cambios en `context/` (v3.1 → v3.2):**
+- `rules/coding_standards.md`: tabla de capas con `data/` y `config/`, ejemplo `@utility
+  cosmic-button` → componente `Button` (patrón shadcn), imports tipo `@/data/projects`,
+  changelog 3.2
+- `rules/architecture_principles.md`: capas `Data`/`Config` añadidas al diagrama y tabla,
+  ejemplo `portfolioData.js` → `data/projects.js` + `config/site.js`, regla "Separación de
+  datos" reescrita (ya no es futura)
+- `rules/quality_gates.md`: checklist actualizado a `data/`/`config/site.js`, changelog 3.2
+- `identity/project_profile.md`: capas + estructura con `config/`/`data/`, dark mode ya
+  publicado en el alcance, Vite 7→8, historial 1.1.0
+- `activation/active_agents.md`: stack Vite 8, dark mode expuesto, estructura con
+  `data/`/`config/`, pendiente de extracción de datos eliminado, indentación 4 espacios,
+  Prettier añadido
+
+**Validación:** referencias `portfolioData`/`cosmic-button`/`Vite 7` eliminadas (solo quedan
+en changelogs documentando el propio cambio). Sin cambios de código → lint/build intactos.
+
+---
+
+### 07/09/2026 — Auditoría de ciberseguridad (profundizada)
+
+Auditoría completa solicitada por el usuario. Superficie de ataque mínima: SPA estático
+en Vercel, sin backend, sin auth, sin uploads, sin cookies de sesión. Riesgo global: **bajo**.
+
+**Controles ya sólidos (sin acción necesaria):**
+| Control | Resultado |
+|---------|-----------|
+| Dependencias npm | 0 vulnerabilidades (`npm audit`); 168 paquetes con firma, 46 con attestations |
+| `.env` en git | NO trackeado; `.env.example` con placeholders |
+| Historial git | Sin secretos en formato conocido (tokens, API keys, etc.) |
+| XSS | Sin `dangerouslySetInnerHTML`/`eval`/`innerHTML`; React auto-escapa |
+| HSTS | Presente en producción (Vercel, `max-age=63072000; includeSubDomains; preload`) |
+| Typosquatting | Sin paquetes sospechosos en la dependencia tree |
+| `noopener noreferrer` | Presente en todos los enlaces externos |
+| CV/archivos públicos | Intencional (portfolio); no hay archivos sensibles |
+| Backend | No existe (`api/` vacío, `vercel.json` no existía antes de la auditoría) |
+
+**Hallazgo 1 — Formulario abusable (severidad: media):**
+- `sendForm` serializaba **cualquier campo del DOM** → un atacante podía inyectar campos
+  ocultos y controlar parámetros del template EmailJS (enviar correos usando la cuenta
+  del dueño como spam).
+- Sin `maxLength` en campos → payloads ilimitados.
+- Sin cooldown → envíos repetidos ilimitados.
+
+**Acción realizada:**
+1. `sendForm` → `emailjs.send` con payload explícito `{ name, email, message }`
+   (nunca tocar el DOM del form para enviar).
+2. Añadido `minLength`/`maxLength` en cliente: `name` (2–100), `email` (≤254),
+   `message` (10–5000).
+3. Cooldown de 30s entre envíos (toasts informativos en español).
+
+**Hallazgo 2 — Cabeceras de seguridad deseadas ausentes (severidad: media):**
+Producción sin `Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options`,
+`Referrer-Policy` ni `Permissions-Policy`. HSTS sí estaba presente (Vercel por defecto).
+
+**Acción realizada:** creado `vercel.json` con las 5 cabeceras (CSP incluye
+`connect-src ... https://api.emailjs.com` y `style-src ... 'unsafe-inline'` para
+estilos inline de React; `frame-ancestors 'none'`, `base-uri 'self'`,
+`upgrade-insecure-requests`).
+
+**Mejoras menores implementadas:**
+- Validación client-side con regex de email + comprobación de longitudes en `handleSubmit`.
+- Botón deshabilitado durante envío (`isSubmitting`); cooldown de 30s entre envíos.
+
+**Pendiente (recomendado):** configurar en el dashboard de EmailJS el **Spam Protection**
+(Turnstile/reCAPTCHA o allowlist de dominios) para refuerzo server-side. El frontend
+no puede prevenir abusos 100%; la protección real está en el rate-limit del servicio.
+
+**Validación:** lint ✅ · build ✅ · Playwright: `maxLength` aplicados (100/254/5000),
+form envía por `emailjs.send` (no `sendForm`), 0 errores de consola ·
+`vercel.json` JSON válido ✅ · headers verificados con `curl` en producción (HSTS sí,
+las 5 nuevas se aplicarán al próximo deploy).
+
+---
+
+### 07/09/2026 — Refactorización Fase 7 (Accesibilidad — C8) en `refactor/code-quality`
+
+Auditoría (C8): filtros de categorías sin semántica de estado (no anunciaban el seleccionado),
+menú móvil sin cierre por teclado, barras de skill sin semántica accesible.
+
+**Cambios en `src/components/Navbar.jsx` (menú móvil):**
+- Cierre con tecla `Escape` (`useCallback` + listener global mientras está abierto)
+- Al cerrar, el foco vuelve al botón del menú (`toggleButtonRef`)
+- Botón toggle con `aria-expanded` + `aria-controls="mobile-menu"`
+- Overlay con `id="mobile-menu"` y `aria-hidden` cuando está cerrado (los enlaces ocultos
+  dejan de ser anunciados por lectores de pantalla)
+
+**Cambios en `src/components/SkillsSection.jsx`:**
+- Botones de categoría con `aria-pressed={activeCategory === id}` (semántica de botón toggle)
+- Barras de nivel con `role="progressbar"`, `aria-valuenow/min/max` y etiqueta accesible
+  (`Nivel en {nombre}: {nivel}%`)
+
+**Validación:** lint ✅ · build ✅ · Playwright: `aria-pressed` alterna al pulsar filtros
+(true en seleccionado, false en los demás), 4 `progressbar` del backend con `valuenow`
+correcto, menú se abre (`aria-expanded=true`), cierra con Escape y el foco vuelve al toggle,
+0 errores de consola.
+
+---
+
+### 07/09/2026 — Refactorización Fase 6 (Limpieza de `index.css` — C6) en `refactor/code-quality`
+
+Auditoría (C6): CSS con código muerto (utility `cosmic-button` y token `--color-button-text`
+sin usos tras C7), estilo inconsistente (trailing whitespace, espaciado de keyframes,
+indentación de `@media`) y Prettier no cubría CSS.
+
+**Cambios en `src/index.css`:**
+- Eliminada utility `cosmic-button` (ya no se referencia: sustituida por el componente `Button` en fase 5)
+- Eliminado token `--color-button-text` de `@theme` (sin consumidores; la variable cruda `--button-text` se conserva porque `Button` la usa vía `hsl(var(--button-text))`)
+- Añadido espacio entre keyframes `float` y `pulse-subtle`
+- Formateado completo con Prettier (indentación 4, `@media` nested, sín trailing whitespace)
+
+**Cambios en `package.json`:** scripts `format` y `format:check` ahora incluyen CSS
+(`src/**/*.{js,jsx,css}`) + formateados `site.js`, `nav.js`, `projects.js`, `skills.js`,
+`useStarBackground.js` (quedaron fuera del alcance anterior).
+
+**Validación:** lint ✅ · build ✅ (CSS de 40.05 kB → 39.05 kB) · `prettier --check` ✅ en
+todo `src/` · Playwright: botón default con color de texto correcto (blanco sobre verde),
+18 barras `animate-grow`, 92 estrellas + 4 meteoros animando, 0 errores de consola.
+
+**Pendiente relacionado:** el ejemplo `@utility cosmic-button` en `context/rules/coding_standards.md`
+está desactualizado (se tratará en C5 / docs).
+
+---
+
+### 07/09/2026 — Refactorización Fase 5 (Botón reutilizable — C7) en `refactor/code-quality`
+
+Auditoría (C7): `className` de botones duplicados entre componentes (`cosmic-button`,
+`px-6 py-2 rounded-full border...`, `px-5 py-2 rounded-full...`) → extraído componente UI.
+
+**Nuevo `src/components/ui/button.jsx`** (patrón shadcn, con `cva` + `@radix-ui/react-slot`):
+- `Button` con variantes `default` (cosmic), `outline` (border primary), `secondary`
+  (filtros), `ghost` (iconos); tamaños `default/sm/lg/icon`
+- Soporte `asChild` para renderizar el mismo estilo sobre `<a>` (enlaces)
+
+| Archivo | Antes | Después |
+|---------|-------|---------|
+| `HeroSection.jsx` | `<a className="cosmic-button">` | `<Button asChild>` |
+| `AboutSection.jsx` | 2 botones (cosmic + outline) | `<Button>` y `<Button variant="outline">` |
+| `ProjectSection.jsx` | `<a className="cosmic-button w-fit flex...">` | `<Button asChild className="w-fit mx-auto">` |
+| `ContactSection.jsx` | `<button className="cosmic-button w-full flex...">` | `<Button className="w-full">` |
+| `SkillsSection.jsx` | `cn("capitalize", activo ? cosmic : bg-secondary/70)` | `<Button size="sm" variant={activo ? default : secondary}>` |
+| `NotFound.jsx` | `<button className="cosmic-button">` | `<Button onClick={navigate}>` |
+| `ThemeToggle.jsx` | `<button className="p-2 rounded-full...">` | `<Button variant="ghost" size="icon">` |
+| `Footer.jsx` | `<a className="p-2 rounded-full bg-primary/10...">` | `<Button asChild variant="ghost" size="icon">` |
+| `Navbar.jsx` | `<button className="md:hidden p-2...">` | `<Button variant="ghost" size="icon" className="md:hidden z-50">` |
+
+- `cosmic-button` ya no se referencia en ningún componente (la utility queda en CSS para C6)
+- `cn` eliminado de `SkillsSection.jsx` (sin usos restantes)
+
+**Validación:** lint ✅ · build ✅ · Playwright: enlaces de Hero/About/CV renderizan como
+botones, filtros de categorías cambian de variante al hacer click (activo → bg-primary),
+menú móvil abre/cierra, 404 funcionando, 0 errores de consola.
+
+---
+
+Auditoría (C3): lógica de generación + renderizado mezclados, funciones re-creadas en
+cada render, resize sin throttle, ~200+ elementos DOM regenerados en cada resize.
+
+**Cambios en `StarBackground.jsx` (de ~96 a ~50 líneas):**
+- Extraída lógica a nuevo hook `src/hooks/useStarBackground.js`: generación de stars
+  (`Array.from`) y meteors fuera del componente, `requestAnimationFrame` como throttle
+  en el resize (evita regenerar todo el fondo en cada evento de resize)
+- Extraídos subcomponentes `Star` y `Meteor` (mismo archivo, solo renderizan estilos)
+- El componente principal solo usa `useStarBackground()` y mapea subcomponentes
+
+**Validación:** lint ✅ · build ✅ · Playwright: 102 estrellas animando `pulse-subtle`,
+4 meteoros animando `meteor` con delays 0/1.25/2.5/3.75s, 0 errores de consola.
+
+---
+
+### 07/09/2026 — Refactorización Fase 3 (Config centralizada — C4) en `refactor/code-quality`
+
+Auditoría (C4): constantes duplicadas a lo largo del código → centralizadas en un módulo
+de configuración.
+
+**Nuevo `src/config/site.js`:** `name`, `ownerEmail`, `githubUrl`, `linkedinUrl`, `url`.
+
+| Archivo | Constantes reemplazadas |
+|---------|-------------------------|
+| `ContactSection.jsx` | email (`mailto` + toast), LinkedIn URL, GitHub URL → `site.*` |
+| `ProjectSection.jsx` | "Ver más en GitHub" URL → `site.githubUrl` |
+| `Navbar.jsx` | nombre "Roberto Ceñera" → `site.name`; `navItems` extraído a `src/data/nav.js` |
+| `Footer.jsx` | nombre → `site.name` |
+
+**Validación:** lint ✅ · build ✅ · Playwright: email, linkedin, github y nombre
+renderizan desde config; 0 errores de consola.
+
+---
+
+### 07/09/2026 — Refactorización Fase 2 (Extracción de datos — C2) en `refactor/code-quality`
+
+Auditoría (C2): datos de negocio embebidos en componentes → extraídos a módulos de datos.
+
+| Archivo | Antes | Después |
+|---------|-------|---------|
+| `SkillsSection.jsx` | `skills` (18) y `categories` (4) hardcodeados | import desde `@/data/skills` |
+| `ProjectSection.jsx` | `projects` (5) hardcodeados | import desde `@/data/projects` |
+| **Nuevo** `src/data/skills.js` | — | export `skills` + `categories` |
+| **Nuevo** `src/data/projects.js` | — | export `projects` |
+
+**Validación:** lint ✅ · build ✅ · Playwright: 18 skills, 5 proyectos, 3 demo links,
+5 github links, 0 errores de consola. Sin cambio visual.
+
+---
+
+### 07/09/2026 — Refactorización Fase 1 (Quick wins) en `refactor/code-quality`
+
+Creada rama `refactor/code-quality` desde `main` (tras merge del PR #3 de fase 2).
+Auditoría completa del código entregada al usuario (categorías: ✅ bien / 🟡 mejora
+mínima / 🔴 refactor completo). Plan por fases; se ejecutó la **Fase 1 (quick wins)**:
+
+| ID | Cambio | Verificación |
+|----|--------|--------------|
+| B1 | `Navbar.jsx`: aria-label "Cerrar menú"/"Abrir menú" (tildes) | ✅ |
+| B2 | `ThemeToggle.jsx`: aria-label/title en español ("Activar modo claro/oscuro") | ✅ |
+| B3 | `Footer.jsx`: `new Date().getFullYear()` extraído a `currentYear`; limpiado doble espacio className | ✅ |
+| B6 | `SkillsSection.jsx`: `animate-[grow_1.5s_ease-out]` → `animate-grow` (usa el `@theme`) | ✅ |
+| B7 | Instalado **Prettier** (config `tabWidth:4`, `semi:false`, `singleQuote:false`); `.prettierrc.json` + `.prettierignore`; scripts `format`/`format:check`; formateados 14 archivos | ✅ |
+
+**Adicional:** instalado **Playwright + Chromium** (devDependency) como herramienta de
+verificación de renderizado, útil para la futura fase 2e (tests).
+
+**Validación:** `npm run lint` ✅ · `npm run build` ✅ · Verificación con Playwright:
+todos los componentes renderizan (navbar, hero, about, skills, projects, contact, footer,
+theme toggle, 102 estrellas, 4 meteoros) y **0 errores de consola**.
+
+**Nota:** Prettier normalizó comillas simples→dobles, quitó semicolons y unificó a 4
+espacios. Excluidos de formateo: `src/components/ui`, `src/hooks/use-toast.js` (código
+shadcn generado con su propio estilo).
+
+---
 
 ### 07/09/2026 — Fix animación meteoros (StarBackground)
 

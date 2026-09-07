@@ -5,7 +5,7 @@
 
 ---
 
-**Última actualización:** 2026-09-03 | **Versión:** 3.1
+**Última actualización:** 2026-09-07 | **Versión:** 3.2
 
 ---
 
@@ -56,9 +56,11 @@ src/
 |------|----------------|----------|
 | **Pages** | Vistas enrutables, composición de secciones | `Home.jsx`, `NotFound.jsx` |
 | **Components** | Bloques de UI atómicos y de sección, sin lógica de negocio | `HeroSection.jsx`, `Navbar.jsx` |
-| **Hooks** | Lógica de estado y efectos extraída para reutilización | `use-toast.js` |
-| **Lib/Utils** | Funciones puras y utilidades compartidas | `utils.js`; los datos de proyectos y skills siguen en sus componentes |
-| **UI Primitives** | Componentes base genéricos y accesibles | `toast`, `toaster` |
+| **Hooks** | Lógica de estado y efectos extraída para reutilización | `use-toast.js`, `useStarBackground.js` |
+| **Data** | Datos estáticos de contenido | `data/skills.js`, `data/projects.js`, `data/nav.js` |
+| **Config** | Configuración del sitio (nombre, email, URLs) | `config/site.js` |
+| **Lib/Utils** | Funciones puras y utilidades compartidas | `utils.js` (clase `cn`) |
+| **UI Primitives** | Componentes base genéricos y accesibles | `button`, `toast`, `toaster` |
 
 ---
 
@@ -193,18 +195,19 @@ export const useTheme = () => {
 }
 ```
 
-### 4️⃣ Lib/Utils (Datos y Funciones Puras)
+### 4️⃣ Lib/Utils (Funciones Puras) y Data/Config (Datos)
 
-**Responsabilidad:** Centralizar datos estáticos, constantes y funciones de utilidad puras.
+**Responsabilidad:** `src/lib/` centraliza funciones de utilidad puras; `src/data/` los datos
+estáticos de contenido y `src/config/site.js` la configuración del sitio.
 
-Actualmente `src/lib/` contiene `utils.js`; los datos de proyectos y skills siguen definidos en sus componentes. La extracción a un módulo de datos es una mejora futura, no una capa ya existente.
+Los proyectos y skills ya viven extraídos en `src/data/` (y la config del sitio en
+`src/config/site.js`); los componentes solo importan desde esas capas.
 
 **Ejemplo Correcto:**
 ```js
-// ✅ Ejemplo de futura extracción a src/lib/portfolioData.js
-export const PROJECTS = [
+// ✅ Correcto: src/data/projects.js
+export const projects = [
   {
-    id: 1,
     title: 'Sistema de Reservas para Restaurantes',
     description: 'Aplicación web completa con panel de administración...',
     technologies: ['PHP', 'MySQL', 'JavaScript'],
@@ -213,11 +216,14 @@ export const PROJECTS = [
   // ...
 ]
 
-export const SKILLS = [
-  { name: 'React', level: 85 },
-  { name: 'PHP', level: 80 },
-  // ...
-]
+// ✅ Correcto: src/config/site.js
+export const site = {
+  name: 'Roberto Ceñera',
+  ownerEmail: 'rcenegar@gmail.com',
+  githubUrl: 'https://github.com/slyder83',
+  linkedinUrl: 'https://www.linkedin.com/in/...',
+  url: 'https://portfolio...'
+}
 ```
 
 ---
@@ -245,7 +251,7 @@ graph LR
 | # | Regla | Descripción |
 |---|-------|-------------|
 | 1 | **Dirección única** | Pages importan Components, Components importan Hooks/Lib, nunca al revés |
-| 2 | **Separación de datos** | Los datos nuevos o compartidos deben extraerse a `lib/`; la extracción completa de los datos actuales sigue pendiente |
+| 2 | **Separación de datos** | Los datos estáticos viven en `src/data/` y la config del sitio en `src/config/site.js`; los componentes nunca embeben arrays de contenido |
 | 3 | **Desacoplamiento** | Los componentes de sección no deben conocer detalles de enrutamiento |
 | 4 | **Sin dependencias circulares** | Verificar con ESLint que no haya ciclos |
 
@@ -260,15 +266,15 @@ export const ProjectSection = () => {
   // ...
 }
 
-// ✅ CORRECTO: Datos centralizados en lib/
-// src/lib/portfolioData.js
-export const PROJECTS = [{ id: 1, title: '...' }]
+// ✅ CORRECTO: Datos centralizados en data/
+// src/data/projects.js
+export const projects = [{ title: '...', technologies: ['PHP'] }]
 
 // src/components/ProjectSection.jsx
-import { PROJECTS } from '../lib/portfolioData'
+import { projects } from '../data/projects'
 export const ProjectSection = () => (
   <section>
-    {PROJECTS.map(p => <ProjectCard key={p.id} {...p} />)}
+    {projects.map(p => <ProjectCard key={p.title} {...p} />)}
   </section>
 )
 ```
@@ -499,7 +505,9 @@ export class CountdownService {
 | Componentes React | `PascalCase.jsx` | `HeroSection.jsx`, `FeatureCard.jsx` |
 | Páginas (vistas) | `PascalCase.jsx` | `Home.jsx`, `NotFound.jsx` |
 | Custom Hooks | `camelCase.js` (prefijo `use`) | `use-toast.js` |
-| Utilidades / datos | `camelCase.js` | `utils.js`; `portfolioData.js` solo cuando se extraigan los datos |
+| Utilidades | `camelCase.js` | `utils.js` |
+| Datos estáticos | `camelCase.js` | `data/skills.js`, `data/projects.js`, `data/nav.js` |
+| Config del sitio | `camelCase.js` | `config/site.js` |
 | Estilos globales | `lowercase.css` | `index.css` |
 
 ### Sufijos Descriptivos
@@ -600,8 +608,9 @@ use*.js          # Custom hooks de React
 | 2.1 | 2026-01-08 | Nueva sección Presentation Layer, estándares HTML5 semántico, principio “Semantic HTML First” |
 | 3.0 | 2026-09-01 | • Migración completa de Clean Architecture (Vanilla JS) a arquitectura basada en componentes React 19<br>• Nueva estructura de directorios real (`components/`, `pages/`, `hooks/`, `lib/`)<br>• Ejemplos de código actualizados a JSX<br>• Reglas de dependencia adaptadas a React<br>• Checklist y convenciones de archivos actualizadas<br>• Referencias actualizadas a documentación oficial de React |
 | **3.1** | **2026-09-03** | • Estructura, hooks y UI primitives alineados con los archivos reales del proyecto<br>• Clean Architecture y patrones avanzados marcados como futuros<br>• Ejemplos heredados de otros proyectos sustituidos por referencias al Portfolio Personal |
+| **3.2** | **2026-09-07** | • Añadidas capas `data/` y `config/` (datos y config ya extraídos del código)<br>• Ejemplos `portfolioData.js` sustituidos por referencias reales a `data/*.js` y `config/site.js` |
 
 ---
 
-**Última actualización:** 2026-09-03  
+**Última actualización:** 2026-09-07  
 **Responsable:** Roberto Ceñera

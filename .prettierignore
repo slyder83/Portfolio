@@ -1,0 +1,8 @@
+dist
+node_modules
+package-lock.json
+cambios.md
+/public
+src/components/ui
+src/hooks/use-toast.js
+scripts

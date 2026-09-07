@@ -44,7 +44,7 @@ Portfolio de Roberto Ceñera, desarrollador web especializado en React, Tailwind
 - Descarga directa del Curriculum Vitae.
 - Formulario de contacto funcional mediante integración con EmailJS.
 - Diseño 100% responsive (mobile-first) con animaciones suaves.
-- Base técnica para tema claro y oscuro, pendiente de exposición completa en la interfaz principal.
+- Tema claro y oscuro con selector en la interfaz (`ThemeToggle`).
 - Arquitectura preparada para futuras escalabilidades.
 
 ### No incluye
@@ -64,11 +64,13 @@ Portfolio de Roberto Ceñera, desarrollador web especializado en React, Tailwind
 graph TD
     UI[Pages Layer<br/>Home, NotFound] --> COMP[Components Layer<br/>Sections, UI Elements]
     COMP --> HOOKS[Hooks Layer<br/>Custom React Logic]
-    COMP --> LIB[Lib/Utils Layer<br/>Data, Helpers]
+    COMP --> DATA[Data/Config Layer<br/>Static Content, Site Config]
+    COMP --> LIB[Lib/Utils Layer<br/>Helpers]
     
     style UI fill:#9C27B0,stroke:#6A1B9A,stroke-width:2px,color:#fff
     style COMP fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
     style HOOKS fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
+    style DATA fill:#8BC34A,stroke:#558B2F,stroke-width:2px,color:#fff
     style LIB fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
 ```
 
@@ -77,7 +79,8 @@ graph TD
 1. **Pages** (`src/pages/`): Vistas enrutables completas.
 2. **Components** (`src/components/`): Bloques de construcción de UI reutilizables.
 3. **Hooks** (`src/hooks/`): Lógica de estado y efectos extraída para reutilización.
-4. **Lib/Utils** (`src/lib/`): Configuraciones, constantes y funciones puras.
+4. **Data/Config** (`src/data/`, `src/config/`): Datos estáticos de contenido y configuración del sitio.
+5. **Lib/Utils** (`src/lib/`): Funciones puras y utilidades.
 
 ### Principios
 - **DRY**: Sin código duplicado, extraer a componentes.
@@ -102,7 +105,7 @@ graph TD
 | Tecnología | Versión | Propósito |
 | --- | --- | --- |
 | React | 19 | Librería base para la UI |
-| Vite | 7 | Build tool y servidor de desarrollo ultrarrápido |
+| Vite | 8 | Build tool y servidor de desarrollo ultrarrápido |
 | Tailwind CSS | v4 | Estilizado mediante clases utilitarias y variables CSS |
 | React Router | 7 | Gestión de rutas de la aplicación |
 
@@ -127,6 +130,8 @@ graph TD
 | `npm run build` | Compila la aplicación para producción |
 | `npm run preview` | Previsualiza el build de producción localmente |
 | `npm run lint` | Ejecuta el análisis de ESLint |
+| `npm run format` | Formatea el código con Prettier (JS, JSX y CSS) |
+| `npm run format:check` | Verifica el formato sin modificar archivos |
 
 ---
 
@@ -137,7 +142,9 @@ graph TD
 ├── src/
 │   ├── assets/           # Imágenes y recursos estáticos
 │   ├── components/       # Componentes React reutilizables
-│   │   └── ui/           # Primitivos de interfaz reutilizables (toast, toaster...)
+│   │   └── ui/           # Primitivos de interfaz reutilizables (button, toast, toaster...)
+│   ├── config/           # Configuración del sitio (site.js: nombre, email, URLs)
+│   ├── data/             # Datos estáticos (skills, projects, nav)
 │   ├── hooks/            # Custom Hooks de React
 │   ├── lib/              # Utilidades y configuración
 │   ├── pages/            # Vistas principales (Home, NotFound)
@@ -175,10 +182,11 @@ graph TD
 | Versión | Fecha | Cambios Principales |
 |---------|-------|---------------------|
 | 1.0.0 | 2026-09-01 | • Migración del contexto de agentes a React/Vite<br>• Refactorización de identidad y reglas IA |
+| 1.1.0 | 2026-09-07 | • Datos extraídos a `data/`, config centralizada en `config/site.js`<br>• Fondo animado refactorizado a hook<br>• Componente UI `Button` añadido |
 | 0.1.0 | 2026-08-01 | • Versión inicial del Portfolio<br>• Implementación de secciones base y estilos Tailwind |
 
 ---
 
-**Última actualización:** 2026-09-01  
+**Última actualización:** 2026-09-07  
 **Próxima revisión:** 2027-01-01  
 **Responsable:** Roberto Ceñera
