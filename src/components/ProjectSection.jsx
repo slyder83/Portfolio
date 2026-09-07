@@ -1,86 +1,105 @@
 import { ArrowRight, ExternalLink, Github } from "lucide-react"
 
 const projects = [
-  {
-    id: 1,
-    title: "Sistema de reservas para restaurante",
-    description:
-      "Aplicación web responsive para gestionar reservas online, con panel de administración y notificaciones por correo electrónico.",
-    image: "/projects/tfg-reservas.webp",
-    imageWidth: 2514,
-    imageHeight: 2158,
-    tags: ["PHP", "MySQL", "JavaScript", "CSS", "HTML"],
-    demoUrl: null,
-    githubUrl: "https://github.com/slyder83/ProyectoFinGrado",
-  },
-  {
-    id: 2,
-    title: "Gestor de vehículos para autoescuelas",
-    description:
-      "Aplicación para controlar vehículos, partes de accidentes y seguros usando almacenamiento como Dropbox sin base de datos.",
-    image: "/projects/autoescuela.webp",
-    imageWidth: 2384,
-    imageHeight: 1586,
-    tags: ["JavaScript", "JSON", "Electron", "HTML", "CSS"],
-    demoUrl: null,
-    githubUrl: "https://github.com/slyder83/Autoescuela",
-  },
-  {
-    id: 3,
-    title: "Efemérides de Videojuegos | Retro Gaming",
-    description:
-      "Descubre las efemérides más destacadas del mundo de los videojuegos. Cada día, un vistazo a la historia del gaming con un toque retro.",
-    image: "/projects/efemerides-videojuegos.webp",
-    imageWidth: 2006,
-    imageHeight: 1610,
-    tags: ["JavaScript", "TypeScript", "React", "Next.js", "Tailwind CSS", "PostCSS", "Node.js", "Supabase"],
-    demoUrl: "https://efemerides-videojuegos.vercel.app/",
-    githubUrl: "https://github.com/slyder83/efemerides-videojuegos",
-  },
-  {
-    id: 4,
-    title: "Buscador de Clima por Ciudad",
-    description:
-      "Aplicación web sencilla donde puedes buscar cualquier ciudad o pueblo y obtener los datos meteorológicos actuales usando JavaScript, HTML y CSS puro, sin frameworks.",
-    image: "/projects/fem-weather.webp",
-    imageWidth: 1326,
-    imageHeight: 825,
-    tags: ["JavaScript", "HTML", "CSS", "API"],
-    demoUrl: "https://fem-weather.vercel.app/",
-    githubUrl: "https://github.com/slyder83/fem-weather",
-  },
-  {
-    id: 5,
-    title: "Victory Royale Timer - Cuenta Regresiva Fortnite",
-    description:
-      "Web ligera y moderna que muestra cuánto falta para la nueva temporada de Fortnite. Diseño gaming, rápido y con cuenta atrás precisa.",
-    image: "/projects/victory-royale-timer.webp",
-    imageWidth: 3242,
-    imageHeight: 2638,
-    tags: ["JavaScript", "HTML", "CSS"],
-    demoUrl: "https://victory-royale-timer.vercel.app/",
-    githubUrl: "",
-  },
-];
+    {
+        id: 1,
+        title: "Sistema de reservas para restaurante",
+        description:
+            "Aplicación web responsive para gestionar reservas online, con panel de administración y notificaciones por correo electrónico.",
+        image: "/projects/tfg-reservas.webp",
+        imageWidth: 2514,
+        imageHeight: 2158,
+        tags: ["PHP", "MySQL", "JavaScript", "CSS", "HTML"],
+        demoUrl: null,
+        githubUrl: "https://github.com/slyder83/ProyectoFinGrado",
+    },
+    {
+        id: 2,
+        title: "Gestor de vehículos para autoescuelas",
+        description:
+            "Aplicación para controlar vehículos, partes de accidentes y seguros usando almacenamiento como Dropbox sin base de datos.",
+        image: "/projects/autoescuela.webp",
+        imageWidth: 2384,
+        imageHeight: 1586,
+        tags: ["JavaScript", "JSON", "Electron", "HTML", "CSS"],
+        demoUrl: null,
+        githubUrl: "https://github.com/slyder83/Autoescuela",
+    },
+    {
+        id: 3,
+        title: "Efemérides de Videojuegos | Retro Gaming",
+        description:
+            "Descubre las efemérides más destacadas del mundo de los videojuegos. Cada día, un vistazo a la historia del gaming con un toque retro.",
+        image: "/projects/efemerides-videojuegos.webp",
+        imageWidth: 2006,
+        imageHeight: 1610,
+        tags: [
+            "JavaScript",
+            "TypeScript",
+            "React",
+            "Next.js",
+            "Tailwind CSS",
+            "PostCSS",
+            "Node.js",
+            "Supabase",
+        ],
+        demoUrl: "https://efemerides-videojuegos.vercel.app/",
+        githubUrl: "https://github.com/slyder83/efemerides-videojuegos",
+    },
+    {
+        id: 4,
+        title: "Buscador de Clima por Ciudad",
+        description:
+            "Aplicación web sencilla donde puedes buscar cualquier ciudad o pueblo y obtener los datos meteorológicos actuales usando JavaScript, HTML y CSS puro, sin frameworks.",
+        image: "/projects/fem-weather.webp",
+        imageWidth: 1326,
+        imageHeight: 825,
+        tags: ["JavaScript", "HTML", "CSS", "API"],
+        demoUrl: "https://fem-weather.vercel.app/",
+        githubUrl: "https://github.com/slyder83/fem-weather",
+    },
+    {
+        id: 5,
+        title: "Victory Royale Timer - Cuenta Regresiva Fortnite",
+        description:
+            "Web ligera y moderna que muestra cuánto falta para la nueva temporada de Fortnite. Diseño gaming, rápido y con cuenta atrás precisa.",
+        image: "/projects/victory-royale-timer.webp",
+        imageWidth: 3242,
+        imageHeight: 2638,
+        tags: ["JavaScript", "HTML", "CSS"],
+        demoUrl: "https://victory-royale-timer.vercel.app/",
+        githubUrl: "",
+    },
+]
 
 export const ProjectSection = () => {
     return (
         <section id="projects" className="py-24 px-4 relative">
             <div className="container mx-auto max-w-5xl">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Proyectos <span className="text-primary">Destacados</span></h2>
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
+                    Proyectos <span className="text-primary">Destacados</span>
+                </h2>
 
-                <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">Aquí puedes ver algunos de los proyectos que he desarrollado durante mi formación como desarrollador web. Están pensados para demostrar mis habilidades tanto en el frontend como en el backend.</p>
+                <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+                    Aquí puedes ver algunos de los proyectos que he desarrollado
+                    durante mi formación como desarrollador web. Están pensados
+                    para demostrar mis habilidades tanto en el frontend como en
+                    el backend.
+                </p>
 
                 <div className="flex flex-wrap justify-center gap-8">
                     {projects.map((project) => (
-                        <div key={project.id} className="w-full sm:w-[47%] lg:w-[30%] group bg-card rounded-lg overflow-hidden shadow-xs card-hover">
+                        <div
+                            key={project.id}
+                            className="w-full sm:w-[47%] lg:w-[30%] group bg-card rounded-lg overflow-hidden shadow-xs card-hover"
+                        >
                             <div className="h-48 overflow-hidden">
-                                <img 
-                                    src={project.image} 
-                                    alt={`Proyecto: ${project.title} — Tecnologías: ${project.tags.join(", ")}`} 
+                                <img
+                                    src={project.image}
+                                    alt={`Proyecto: ${project.title} — Tecnologías: ${project.tags.join(", ")}`}
                                     width={project.imageWidth}
                                     height={project.imageHeight}
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                     loading="lazy"
                                     decoding="async"
                                 />
@@ -89,32 +108,41 @@ export const ProjectSection = () => {
                             <div className="p-6">
                                 <div className="flex flex-wrap gap-2 justify-between mb-4">
                                     {project.tags.map((tag) => (
-                                      <span key={`${project.id}-${tag}`} className="px-2 py-1 text-xs font-medium border rounded-full bg-primary/30 text-secondary-foreground">{tag}</span>
+                                        <span
+                                            key={`${project.id}-${tag}`}
+                                            className="px-2 py-1 text-xs font-medium border rounded-full bg-primary/30 text-secondary-foreground"
+                                        >
+                                            {tag}
+                                        </span>
                                     ))}
                                 </div>
-                                <h3 className="text-xl font-semibold mb-1">{project.title}</h3>
-                                <p className="text-muted-foreground text-sm mb-4">{project.description}</p>
+                                <h3 className="text-xl font-semibold mb-1">
+                                    {project.title}
+                                </h3>
+                                <p className="text-muted-foreground text-sm mb-4">
+                                    {project.description}
+                                </p>
                                 <div className="flex justify-between items-center">
                                     <div className="flex space-x-3">
                                         {project.demoUrl && (
                                             <a
-                                            href={project.demoUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            aria-label={`Demo de ${project.title}`}
-                                            className="text-foreground/80 hover:text-primary transition-colors duration-300"
+                                                href={project.demoUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                aria-label={`Demo de ${project.title}`}
+                                                className="text-foreground/80 hover:text-primary transition-colors duration-300"
                                             >
-                                            <ExternalLink size={20} />
+                                                <ExternalLink size={20} />
                                             </a>
                                         )}
                                         {project.githubUrl && (
                                             <a
-                                            href={project.githubUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-foreground/80 hover:text-primary transition-colors duration-300"
+                                                href={project.githubUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-foreground/80 hover:text-primary transition-colors duration-300"
                                             >
-                                            <Github size={20} />
+                                                <Github size={20} />
                                             </a>
                                         )}
                                     </div>
@@ -124,7 +152,12 @@ export const ProjectSection = () => {
                     ))}
                 </div>
                 <div className="text-center mt-12">
-                    <a href="https://github.com/slyder83" className="cosmic-button w-fit flex items-center mx-auto gap-2" target="_blank" rel="noopener noreferrer">
+                    <a
+                        href="https://github.com/slyder83"
+                        className="cosmic-button w-fit flex items-center mx-auto gap-2"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
                         Ver más en GitHub <ArrowRight size={16} />
                     </a>
                 </div>

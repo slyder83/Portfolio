@@ -48,6 +48,33 @@ Completadas: a) verificación producción, b) revisión de código, c) seguridad
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
 
+### 07/09/2026 — Refactorización Fase 1 (Quick wins) en `refactor/code-quality`
+
+Creada rama `refactor/code-quality` desde `main` (tras merge del PR #3 de fase 2).
+Auditoría completa del código entregada al usuario (categorías: ✅ bien / 🟡 mejora
+mínima / 🔴 refactor completo). Plan por fases; se ejecutó la **Fase 1 (quick wins)**:
+
+| ID | Cambio | Verificación |
+|----|--------|--------------|
+| B1 | `Navbar.jsx`: aria-label "Cerrar menú"/"Abrir menú" (tildes) | ✅ |
+| B2 | `ThemeToggle.jsx`: aria-label/title en español ("Activar modo claro/oscuro") | ✅ |
+| B3 | `Footer.jsx`: `new Date().getFullYear()` extraído a `currentYear`; limpiado doble espacio className | ✅ |
+| B6 | `SkillsSection.jsx`: `animate-[grow_1.5s_ease-out]` → `animate-grow` (usa el `@theme`) | ✅ |
+| B7 | Instalado **Prettier** (config `tabWidth:4`, `semi:false`, `singleQuote:false`); `.prettierrc.json` + `.prettierignore`; scripts `format`/`format:check`; formateados 14 archivos | ✅ |
+
+**Adicional:** instalado **Playwright + Chromium** (devDependency) como herramienta de
+verificación de renderizado, útil para la futura fase 2e (tests).
+
+**Validación:** `npm run lint` ✅ · `npm run build` ✅ · Verificación con Playwright:
+todos los componentes renderizan (navbar, hero, about, skills, projects, contact, footer,
+theme toggle, 102 estrellas, 4 meteoros) y **0 errores de consola**.
+
+**Nota:** Prettier normalizó comillas simples→dobles, quitó semicolons y unificó a 4
+espacios. Excluidos de formateo: `src/components/ui`, `src/hooks/use-toast.js` (código
+shadcn generado con su propio estilo).
+
+---
+
 ### 07/09/2026 — Fix animación meteoros (StarBackground)
 
 El usuario reportó que los meteoros aparecían **estáticos/parados** al cargar y empezaban

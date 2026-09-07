@@ -16,8 +16,12 @@ export const NotFound = () => {
             {/* Main Content */}
             <main className="z-10 text-center max-w-md">
                 <h1 className="text-6xl font-bold mb-4">404</h1>
-                <p className="text-lg mb-6">Lo siento, la página que buscas no existe.</p>
-                <button onClick={() => navigate("/")} className="cosmic-button">Volver al inicio</button>
+                <p className="text-lg mb-6">
+                    Lo siento, la página que buscas no existe.
+                </p>
+                <button onClick={() => navigate("/")} className="cosmic-button">
+                    Volver al inicio
+                </button>
             </main>
         </div>
     )

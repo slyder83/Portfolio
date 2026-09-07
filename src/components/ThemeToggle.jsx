@@ -7,14 +7,16 @@ export const ThemeToggle = () => {
 
     useEffect(() => {
         const storedTheme = localStorage.getItem("theme")
-        if(storedTheme === "dark") {
+        if (storedTheme === "dark") {
             document.documentElement.classList.add("dark")
             setIsDarkMode(true)
         } else if (storedTheme === "light") {
             document.documentElement.classList.remove("dark")
             setIsDarkMode(false)
         } else {
-            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+            const prefersDark = window.matchMedia(
+                "(prefers-color-scheme: dark)",
+            ).matches
             if (prefersDark) {
                 document.documentElement.classList.add("dark")
                 setIsDarkMode(true)
@@ -26,7 +28,7 @@ export const ThemeToggle = () => {
     }, [])
 
     const toggleTheme = () => {
-        if(isDarkMode) {
+        if (isDarkMode) {
             document.documentElement.classList.remove("dark")
             localStorage.setItem("theme", "light")
             setIsDarkMode(false)
@@ -35,14 +37,18 @@ export const ThemeToggle = () => {
             localStorage.setItem("theme", "dark")
             setIsDarkMode(true)
         }
-    } 
+    }
 
     return (
-        <button 
-            onClick={toggleTheme} 
-            aria-label={isDarkMode ? "Activate light mode" : "Activate dark mode"} 
-            title={isDarkMode ? "Activate light mode" : "Activate dark mode"} 
-            className={cn("p-2 rounded-full transition-colors duration-300 focus:outline-hidden")}
+        <button
+            onClick={toggleTheme}
+            aria-label={
+                isDarkMode ? "Activar modo claro" : "Activar modo oscuro"
+            }
+            title={isDarkMode ? "Activar modo claro" : "Activar modo oscuro"}
+            className={cn(
+                "p-2 rounded-full transition-colors duration-300 focus:outline-hidden",
+            )}
         >
             {isDarkMode ? (
                 <Sun className="h-6 w-6 text-yellow-300" />
