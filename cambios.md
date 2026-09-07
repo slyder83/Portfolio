@@ -26,7 +26,7 @@ Para retomar la sesión desde donde lo dejamos:
    - **Auditoría de ciberseguridad completada y mergeada** (07/09/2026).
    - **Tareas pendientes (nueva rama `feat/phase-2-remaing`, por orden de prioridad):**
       f) CI/CD (lint + build automáticos) → **completada** (workflow verificado en GitHub Actions)
-      e) Tests (TDD / browser-testing) → **en curso**
+      e) Tests (TDD / browser-testing) → **completada** (9 unit + 13 E2E, CI verde)
       d) Rendimiento (Core Web Vitals, bundle JS) → pendiente
       d) Rendimiento (Core Web Vitals, bundle JS) → pendiente
       g) Observabilidad (analytics, logging) → pendiente
@@ -69,7 +69,8 @@ Pirámide de tests según TDD (RED → GREEN → REFACTOR).
 package.json, `noopener` reutilizado. ESLint ahora incluye globals de node (playwright.config).
 
 **CI (`ci.yml`):** job `quality` ampliado con tests unitarios; nuevo job `e2e` con
-`playwright install --with-deps chromium`.
+`playwright install --with-deps chromium`. **Verificado en GitHub Actions**: run #3
+completado con éxito (ambas jobs, incluyendo E2E en CI real).
 
 ### 07/09/2026 — Fase 2f: CI/CD en GitHub Actions en `feat/phase-2-remaing`
 
