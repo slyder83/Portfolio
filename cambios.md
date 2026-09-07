@@ -48,6 +48,31 @@ Completadas: a) verificación producción, b) revisión de código, c) seguridad
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
 
+### 07/09/2026 — Refactorización Fase 6 (Limpieza de `index.css` — C6) en `refactor/code-quality`
+
+Auditoría (C6): CSS con código muerto (utility `cosmic-button` y token `--color-button-text`
+sin usos tras C7), estilo inconsistente (trailing whitespace, espaciado de keyframes,
+indentación de `@media`) y Prettier no cubría CSS.
+
+**Cambios en `src/index.css`:**
+- Eliminada utility `cosmic-button` (ya no se referencia: sustituida por el componente `Button` en fase 5)
+- Eliminado token `--color-button-text` de `@theme` (sin consumidores; la variable cruda `--button-text` se conserva porque `Button` la usa vía `hsl(var(--button-text))`)
+- Añadido espacio entre keyframes `float` y `pulse-subtle`
+- Formateado completo con Prettier (indentación 4, `@media` nested, sín trailing whitespace)
+
+**Cambios en `package.json`:** scripts `format` y `format:check` ahora incluyen CSS
+(`src/**/*.{js,jsx,css}`) + formateados `site.js`, `nav.js`, `projects.js`, `skills.js`,
+`useStarBackground.js` (quedaron fuera del alcance anterior).
+
+**Validación:** lint ✅ · build ✅ (CSS de 40.05 kB → 39.05 kB) · `prettier --check` ✅ en
+todo `src/` · Playwright: botón default con color de texto correcto (blanco sobre verde),
+18 barras `animate-grow`, 92 estrellas + 4 meteoros animando, 0 errores de consola.
+
+**Pendiente relacionado:** el ejemplo `@utility cosmic-button` en `context/rules/coding_standards.md`
+está desactualizado (se tratará en C5 / docs).
+
+---
+
 ### 07/09/2026 — Refactorización Fase 5 (Botón reutilizable — C7) en `refactor/code-quality`
 
 Auditoría (C7): `className` de botones duplicados entre componentes (`cosmic-button`,
