@@ -10,7 +10,7 @@ const projects = [
     imageWidth: 2514,
     imageHeight: 2158,
     tags: ["PHP", "MySQL", "JavaScript", "CSS", "HTML"],
-    demoUrl: "#",
+    demoUrl: null,
     githubUrl: "https://github.com/slyder83/ProyectoFinGrado",
   },
   {
@@ -22,7 +22,7 @@ const projects = [
     imageWidth: 2384,
     imageHeight: 1586,
     tags: ["JavaScript", "JSON", "Electron", "HTML", "CSS"],
-    demoUrl: "#",
+    demoUrl: null,
     githubUrl: "https://github.com/slyder83/Autoescuela",
   },
   {
@@ -96,7 +96,7 @@ export const ProjectSection = () => {
                                 <p className="text-muted-foreground text-sm mb-4">{project.description}</p>
                                 <div className="flex justify-between items-center">
                                     <div className="flex space-x-3">
-                                        {project.demoUrl && project.demoUrl !== "#" && (
+                                        {project.demoUrl && (
                                             <a
                                             href={project.demoUrl}
                                             target="_blank"
