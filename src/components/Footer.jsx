@@ -1,4 +1,5 @@
 import { ArrowUp } from "lucide-react"
+import { site } from "@/config/site"
 
 const currentYear = new Date().getFullYear()
 
@@ -9,7 +10,7 @@ export const Footer = () => {
                 <p className="text-sm text-muted-foreground tracking-wide">
                     &copy; {currentYear}{" "}
                     <span className="font-semibold text-foreground">
-                        Roberto Ceñera
+                        {site.name}
                     </span>
                     . Todos los derechos reservados.
                 </p>

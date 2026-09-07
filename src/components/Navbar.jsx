@@ -2,14 +2,8 @@ import { cn } from "@/lib/utils"
 import { useEffect, useState } from "react"
 import { Menu, X } from "lucide-react"
 import { ThemeToggle } from "./ThemeToggle"
-
-const navItems = [
-    { name: "Inicio", href: "#hero" },
-    { name: "Sobre mí", href: "#about" },
-    { name: "Habilidades", href: "#skills" },
-    { name: "Proyectos", href: "#projects" },
-    { name: "Contacto", href: "#contact" },
-]
+import { navItems } from "@/data/nav"
+import { site } from "@/config/site"
 
 export const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false)
@@ -50,7 +44,7 @@ export const Navbar = () => {
                 >
                     <span className="relative z-10">
                         <span className="text-glow text-foreground">
-                            Roberto Ceñera
+                            {site.name}
                         </span>{" "}
                         Portfolio
                     </span>

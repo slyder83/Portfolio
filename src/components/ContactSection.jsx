@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
 import { useState, useRef } from "react"
 import emailjs from "@emailjs/browser"
+import { site } from "@/config/site"
 
 export const ContactSection = () => {
     const { toast } = useToast()
@@ -31,8 +32,7 @@ export const ContactSection = () => {
             .catch(() => {
                 toast({
                     title: "Error al enviar",
-                    description:
-                        "No se pudo enviar el mensaje. Puedes escribirme directamente a rcenegar@gmail.com",
+                    description: `No se pudo enviar el mensaje. Puedes escribirme directamente a ${site.ownerEmail}`,
                     variant: "destructive",
                 })
             })
@@ -68,10 +68,10 @@ export const ContactSection = () => {
                                         Correo electrónico
                                     </h4>
                                     <a
-                                        href="mailto:rcenegar@gmail.com"
+                                        href={`mailto:${site.ownerEmail}`}
                                         className="text-muted-foreground hover:text-primary transition-colors"
                                     >
-                                        rcenegar@gmail.com
+                                        {site.ownerEmail}
                                     </a>
                                 </div>
                             </div>
@@ -93,7 +93,7 @@ export const ContactSection = () => {
                             <h4 className="font-medium mb-4">Redes sociales</h4>
                             <div className="flex space-x-4 justify-center">
                                 <a
-                                    href="https://www.linkedin.com/in/rcenegar"
+                                    href={site.linkedinUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     aria-label="LinkedIn"
@@ -102,7 +102,7 @@ export const ContactSection = () => {
                                     <Linkedin />
                                 </a>
                                 <a
-                                    href="https://github.com/slyder83"
+                                    href={site.githubUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     aria-label="GitHub"
