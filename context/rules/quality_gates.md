@@ -5,7 +5,7 @@
 
 ---
 
-**Última actualización:** 2026-09-03 | **Versión:** 3.1
+**Última actualización:** 2026-09-07 | **Versión:** 3.2
 
 ---
 
@@ -140,7 +140,7 @@ var handleClick = function() { /* ... */ }
 |------|---------|---------|--------|
 | Componentes React | `PascalCase.jsx` | `HeroSection.jsx` | Inglés |
 | Custom Hooks | `use*.js` | `use-toast.js` | Inglés |
-| Utilidades / Datos | `camelCase.js` | `portfolioData.js`, `utils.js` | Inglés |
+| Utilidades / Datos | `camelCase.js` | `utils.js`, `data/skills.js`, `data/projects.js` | Inglés |
 | Variables | `camelCase` | `isSubmitting`, `projectList` | Inglés |
 | Constantes | `UPPER_SNAKE_CASE` | `EMAILJS_SERVICE_ID` | Inglés |
 
@@ -481,7 +481,7 @@ const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 - [ ] ¿La lógica pura está en `lib/`, no en componentes?
 - [ ] ¿No se mutan objetos de estado directamente?
 - [ ] ¿Se usa desestructuración e inmutabilidad?
-- [ ] ¿Los datos de contenido vienen de `lib/portfolioData.js`?
+- [ ] ¿Los datos de contenido vienen de `data/` o de `config/site.js`?
 
 #### Pruebas
 - [ ] ¿Las funciones puras de `lib/` tienen tests unitarios? *(cuando exista runner)*
@@ -520,9 +520,9 @@ const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 - [ ] ¿Hay `<link rel="canonical">` apuntando a producción?
 
 #### Arquitectura
-- [ ] ¿El código está en la capa correcta (`components/`, `pages/`, `hooks/`, `lib/`)?
+- [ ] ¿El código está en la capa correcta (`components/`, `pages/`, `hooks/`, `data/`, `config/`)?
 - [ ] ¿Se respetan las reglas de dependencia (ver `architecture_principles.md`)?
-- [ ] ¿`lib/portfolioData.js` es la fuente de verdad para datos de contenido?
+- [ ] ¿`data/` y `config/site.js` son la fuente de verdad para datos de contenido?
 
 ---
 
@@ -569,8 +569,9 @@ const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 | 2.1 | 2026-01-08 | • **Sección HTML ampliada con ejemplos completos**<br>• Añadida validación de "Regla del 30%" (máx 30% divs/spans)<br>• Añadida validación de etiquetas semánticas específicas<br>• Añadida validación de atributo `datetime` en `<time>`<br>• **Referencia cruzada a `coding_standards.md`** para guía completa<br>• Checklist HTML expandido (3→5 validaciones)<br>• HTMLHint añadido a herramientas<br>• Ejemplo de estructura completa (header, main, footer)<br>• Alineación total con `coding_standards.md` v2.2 |
 | **3.0** | **2026-09-02** | • Migración de Vanilla JS / Victory Royale Timer a React 19 / Portfolio Personal<br>• Sección 1 adaptada a JSX semántico y Tailwind CSS v4<br>• Nomenclatura actualizada (`PascalCase.jsx`, `use*.js`)<br>• Capas de tests: Lib/Hooks/Components/Pages (criterio aspiracional)<br>• Ejemplos de accesibilidad del Portfolio (ThemeToggle, toasts, aria-hidden)<br>• Rendimiento con Vite y optimización de imágenes de proyectos<br>• Seguridad con EmailJS y variables de entorno<br>• SEO con meta tags reales de `index.html` y JSON-LD<br>• Checklist completo adaptado a React<br>• Herramientas: ESLint, React DevTools, Vite<br>• Alineación con `coding_standards.md` v3.0 y `architecture_principles.md` v3.0 |
 | **3.1** | **2026-09-03** | • Ejemplo de imágenes actualizado para usar datos del proyecto sin documentar rutas inexistentes |
+| **3.2** | **2026-09-07** | • Capa de datos actualizada a `data/` y `config/site.js` (extracción completada)<br>• Checklist de arquitectura revisado (vueltos a capas reales del proyecto) |
 
 ---
 
-**Última actualización:** 2026-09-03  
+**Última actualización:** 2026-09-07  
 **Responsable:** Roberto Ceñera

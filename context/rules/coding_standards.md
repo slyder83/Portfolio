@@ -5,7 +5,7 @@
 
 ---
 
-**Última actualización:** 2026-09-03 | **Versión:** 3.1
+**Última actualización:** 2026-09-07 | **Versión:** 3.2
 
 ---
 
@@ -45,9 +45,10 @@ src/
 ### Ubicación del Código
 | Tipo de Código | Capa | Ejemplo |
 |----------------|------|---------|
-| Datos estáticos (proyectos, skills) | Lib | Extraer a `portfolioData.js` en una futura refactorización; hoy están en los componentes correspondientes |
-| Lógica de estado compleja | Hooks | Hooks existentes como `use-toast.js`; crear otros solo cuando la lógica lo requiera |
-| Primitivos de UI reutilizables | Components/ui | `toast.jsx`, `toaster.jsx` |
+| Datos estáticos (proyectos, skills, nav) | Data | `data/skills.js`, `data/projects.js`, `data/nav.js` |
+| Configuración del sitio (email, URLs, nombre) | Config | `config/site.js` |
+| Lógica de estado compleja | Hooks | Hooks existentes como `use-toast.js`, `useStarBackground.js`; crear otros solo cuando la lógica lo requiera |
+| Primitivos de UI reutilizables | Components/ui | `button.jsx`, `toast.jsx`, `toaster.jsx` |
 | Secciones de página | Components | `HeroSection.jsx` |
 | Composición de vistas | Pages | `Home.jsx` |
 | Estilos globales y variables | Raíz | `index.css` |
@@ -82,9 +83,9 @@ src/
 | Tipo | Convención | Ejemplo |
 |------|-----------|---------|
 | Componentes React | `PascalCase.jsx` | `HeroSection.jsx`, `FeatureCard.jsx` |
-| Variables y funciones | `camelCase` | `portfolioData`, `handleSubmit` |
+| Variables y funciones | `camelCase` | `activeCategory`, `handleSubmit` |
 | Constantes | `UPPER_SNAKE_CASE` | `EMAILJS_SERVICE_ID` |
-| Archivos de utilidad/datos | `camelCase.js` | `utils.js`, `portfolioData.js` (cuando se extraiga) |
+| Archivos de utilidad/datos | `camelCase.js` | `utils.js`, `data/skills.js`, `data/projects.js` |
 | Custom Hooks | `camelCase.js` con prefijo `use` | `use-toast.js` |
 | Carpetas | `kebab-case` o descriptivo | `components/`, `lib/` |
 | Booleanos | Prefijo interrogativo | `isOpen`, `hasError`, `isDark` |
@@ -98,7 +99,9 @@ index.css           # Estilos globales y @theme de Tailwind
 *Section.jsx        # Secciones de página
 *Card.jsx           # Tarjetas de contenido
 use*.js             # Custom Hooks de React
-*Data.js            # Datos estáticos en lib/
+data/*.js           # Datos estáticos (skills, projects, nav)
+config/site.js      # Configuración del sitio
+components/ui/*.jsx # Primitivos de UI reutilizables
 ```
 
 ---
@@ -135,7 +138,8 @@ import { useToast } from '../hooks/use-toast'
 
 // 4. Imports de datos/utilidades
 import { cn } from '../lib/utils'
-// Cuando exista: import { PROJECTS } from '../lib/portfolioData'
+import { projects } from '../data/projects'
+import { site } from '../config/site'
 ```
 
 ### Extensiones
@@ -502,19 +506,19 @@ npm run outline:html
 ### Clases de Utilidad vs CSS Ad-hoc
 ```jsx
 /* ✅ CORRECTO: Usar clases Tailwind */
-<button className="px-6 py-2 rounded-full bg-primary font-medium
-                   transition-all duration-300 hover:scale-105">
+<div className="px-6 py-2 rounded-full border border-primary text-primary">
   Contacta
-</button>
+</div>
 
-/* ✅ CORRECTO: @utility en index.css para patrones repetidos */
-/* En index.css: */
-@utility cosmic-button {
-  @apply px-6 py-2 rounded-full bg-primary font-medium
-         transition-all duration-300 hover:scale-105;
-}
+/* ✅ CORRECTO: Usar el componente Button (patrón shadcn, cva) para botones */
+/* En src/components/ui/button.jsx: */
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 rounded-full ...",
+  { variants: { variant: { default: "bg-primary", outline: "border border-primary" } } }
+)
 /* En JSX: */
-<button className="cosmic-button">Contacta</button>
+<Button variant="outline">Contacta</Button>
+<Button asChild><a href="#contact">Contacta</a></Button>
 
 /* ❌ INCORRECTO: CSS inline para estilos que pueden ser Tailwind */
 <button style={{ padding: '0.5rem 1.5rem', borderRadius: '9999px' }}>
@@ -672,9 +676,9 @@ setTimeout(() => {
 // ❌ PROHIBIDO: Texto hardcodeado
 const message = 'Soy desarrollador web';
 
-// ✅ CORRECTO: Datos centralizados en lib/
-const { bio } = portfolioData;
-const message = bio.short;
+// ✅ CORRECTO: Datos centralizados en data/
+import { projects } from '../data/projects'
+const title = projects[0].title;
 ```
 
 ---
@@ -892,9 +896,10 @@ if (count === 5) { }
 | 2.1 | 2026-01-04 | Tabla de prohibiciones, herramientas (ESLint, Prettier), anti-patrones, referencias |
 | 2.2 | 2026-01-08 | Sección HTML5 semántico completa, regla del 30%, ARIA, accesibilidad, HTMLHint |
 | **3.1** | **2026-09-03** | • Reglas y ejemplos alineados con la estructura actual de Portfolio Personal<br>• Separación de datos documentada como objetivo futuro<br>• Import y componentes UI actualizados a las rutas existentes |
+| **3.2** | **2026-09-07** | • Datos extraídos a `data/` y config a `config/site.js` (refactor completado)<br>• Ejemplo `cosmic-button` sustituido por el componente `Button` (patrón shadcn) |
 | 3.0 | 2026-09-01 | • Migración de Vanilla JS / Clean Arch a React 19 / Tailwind CSS v4<br>• Sección de arquitectura actualizada a componentes React<br>• CSS reemplazado por estándares Tailwind v4<br>• Imports actualizados al orden React<br>• Prohibiciones revisadas (sin frameworks externos → sin componentes clase)<br>• Herramientas actualizadas (ESLint ya configurado en el proyecto)<br>• Referencias actualizadas a React, Vite y Tailwind |
 
 ---
 
-**Última actualización:** 2026-09-03  
+**Última actualización:** 2026-09-07
 **Responsable:** Roberto Ceñera

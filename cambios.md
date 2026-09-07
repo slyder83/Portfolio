@@ -48,6 +48,36 @@ Completadas: a) verificación producción, b) revisión de código, c) seguridad
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
 
+### 07/09/2026 — Refactorización Fase 8 (Documentación — C5) en `refactor/code-quality`
+
+Auditoría (C5): README desactualizado y documentación de `context/` con referencias a una
+`lib/portfolioData.js` que nunca existió, a la utility `cosmic-button` ya eliminada, a "Vite 7"
+y a un dark mode "pendiente" que ya está publicado.
+
+**Cambios en `README.md`:**
+- Reescrito: stack real (React 19, Vite 8, Tailwind v4, React Router v7, Radix+CVA, EmailJS),
+  características actuales (dark mode, fondo animado, `Button`), estructura `src/`, scripts
+  (`format`/`format:check`), tabla de scripts y configuración (`site.js`, `data/`)
+
+**Cambios en `context/` (v3.1 → v3.2):**
+- `rules/coding_standards.md`: tabla de capas con `data/` y `config/`, ejemplo `@utility
+  cosmic-button` → componente `Button` (patrón shadcn), imports tipo `@/data/projects`,
+  changelog 3.2
+- `rules/architecture_principles.md`: capas `Data`/`Config` añadidas al diagrama y tabla,
+  ejemplo `portfolioData.js` → `data/projects.js` + `config/site.js`, regla "Separación de
+  datos" reescrita (ya no es futura)
+- `rules/quality_gates.md`: checklist actualizado a `data/`/`config/site.js`, changelog 3.2
+- `identity/project_profile.md`: capas + estructura con `config/`/`data/`, dark mode ya
+  publicado en el alcance, Vite 7→8, historial 1.1.0
+- `activation/active_agents.md`: stack Vite 8, dark mode expuesto, estructura con
+  `data/`/`config/`, pendiente de extracción de datos eliminado, indentación 4 espacios,
+  Prettier añadido
+
+**Validación:** referencias `portfolioData`/`cosmic-button`/`Vite 7` eliminadas (solo quedan
+en changelogs documentando el propio cambio). Sin cambios de código → lint/build intactos.
+
+---
+
 ### 07/09/2026 — Refactorización Fase 7 (Accesibilidad — C8) en `refactor/code-quality`
 
 Auditoría (C8): filtros de categorías sin semántica de estado (no anunciaban el seleccionado),

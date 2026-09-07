@@ -6,12 +6,12 @@
 > Los archivos en `agents/` son **legacy** — mantener solo como referencia histórica.
 > Ver [ai-docs/skills/README.md](../../ai-docs/skills/README.md) para el índice actualizado.
 
-> **Última actualización global:** 2026-09-03  
-> **Estado del proyecto:** `context/` actualizado a v3.1 (Portfolio Personal / React 19). Las skills propias pendientes de adaptación permanecen en revisión.
+> **Última actualización global:** 2026-09-07  
+> **Estado del proyecto:** `context/` actualizado a v3.2 (Portfolio Personal / React 19). Las skills propias pendientes de adaptación permanecen en revisión.
 
 ---
 
-**Versión del registro:** 3.1
+**Versión del registro:** 3.2
 
 ---
 
@@ -64,8 +64,8 @@ pie title Estado de Skills internos (Total: 16)
 | **Skills Activos** | 4/16 (25%) | ⚠️ Bajo |
 | **Skills Pendientes de revisión** | 10/16 (62.5%) | ⚠️ Alto |
 | **Skills Pausados** | 2/16 (12.5%) | ✅ Esperado (no aplican al Portfolio) |
-| **Última actualización de context** | 2026-09-03 | ✅ Completada |
-| **Cobertura de `context/` v3.1** | 6/6 archivos | ✅ Completo |
+| **Última actualización de context** | 2026-09-07 | ✅ Completada |
+| **Cobertura de `context/` v3.2** | 6/6 archivos | ✅ Completo |
 
 > Las 25 skills externas de `ai-docs/addy-agent-skills/` no se contabilizan como activas del proyecto.
 
@@ -87,10 +87,10 @@ pie title Estado de Skills internos (Total: 16)
 - ✅ `context/activation/active_agents.md` — Este registro
 
 **Stack actual del Portfolio:**
-- ✅ React 19 + Vite 7 + Tailwind CSS v4
+- ✅ React 19 + Vite 8 + Tailwind CSS v4
 - ✅ React Router v7 para enrutamiento
-- ✅ ESLint configurado (`npm run lint`)
-- ✅ Base técnica de dark mode con `ThemeToggle`; el control aún no está expuesto en la interfaz principal
+- ✅ ESLint configurado (`npm run lint`) + Prettier (`npm run format`)
+- ✅ Dark mode con `ThemeToggle` expuesto en navbar y menú móvil
 - ✅ Formulario de contacto con EmailJS (variables `.env`)
 - ✅ SEO: JSON-LD `Person` + `WebSite` en `index.html`
 
@@ -98,9 +98,11 @@ pie title Estado de Skills internos (Total: 16)
 ```
 src/
 ├── components/       # HeroSection, ProjectSection, Navbar, Footer...
-│   └── ui/           # toast, toaster (Radix UI)
+│   └── ui/           # button, toast, toaster (Radix UI/shadcn)
 ├── pages/            # Home, NotFound
-├── hooks/            # use-toast.js
+├── hooks/            # use-toast.js, useStarBackground.js
+├── data/             # skills.js, projects.js, nav.js
+├── config/           # site.js (nombre, email, URLs)
 ├── lib/              # utils.js (cn)
 ├── App.jsx           # Enrutamiento principal
 ├── main.jsx          # Punto de entrada
@@ -108,7 +110,6 @@ src/
 ```
 
 **Pendiente (mejoras futuras, no bloqueantes):**
-- ⏳ Extraer datos de proyectos a `lib/portfolioData.js` (actualmente en `ProjectSection.jsx`)
 - ⏳ Configurar runner de tests (Vitest)
 - ⏳ Migrar y validar skills en `ai-docs/skills/` de Victory Royale Timer a Portfolio
 - ⏳ Evaluar skills de `ai-docs/addy-agent-skills/` de forma individual antes de incorporarlas
@@ -192,19 +193,22 @@ Si un skill es invocado por primera vez después de 2026-09-02, debe saber:
 
 ### Stack Actual
 - **React 19** — Componentes funcionales con Hooks (sin clases)
-- **Vite 7** — Build tool y dev server
+- **Vite 8** — Build tool y dev server
 - **Tailwind CSS v4** — Estilos con clases utilitarias y `@theme` en `index.css`
 - **React Router v7** — Enrutamiento SPA
 - **ESLint** — Análisis estático (`npm run lint`)
+- **Prettier** — Formato (`npm run format`)
 - **EmailJS** — Formulario de contacto (credenciales en `.env`)
 
 ### Estructura de Código
 ```
 src/
 ├── components/      # Componentes reutilizables de UI
-│   └── ui/          # Primitivos (toast, toaster)
+│   └── ui/          # Primitivos (button, toast, toaster)
 ├── pages/           # Vistas enrutables (Home, NotFound)
 ├── hooks/           # Custom Hooks de React
+├── data/            # Datos estáticos (skills, projects, nav)
+├── config/          # Configuración del sitio (site.js)
 ├── lib/             # Funciones puras y utilidades
 ├── App.jsx          # Enrutamiento principal
 ├── main.jsx         # Punto de entrada
@@ -212,10 +216,10 @@ src/
 ```
 
 ### Estándares de Código
-- **Indentación:** 2 espacios (NO tabs) ⚠️ CRÍTICO
+- **Indentación:** 4 espacios (configuración de Prettier) ⚠️ CRÍTICO
 - **Idioma:** Inglés para código técnico; español para contenido visible
-- **Nomenclatura:** `PascalCase.jsx` (componentes), `use*.js` (hooks), `camelCase.js` (lib)
-- **Imports:** Librerías externas → componentes → hooks → lib
+- **Nomenclatura:** `PascalCase.jsx` (componentes), `use*.js` (hooks), `camelCase.js` (lib/data/config)
+- **Imports:** Librerías externas → componentes → hooks → data/config → lib
 - **JSDoc:** Obligatorio para funciones exportadas en `lib/`
 
 ### Principios
