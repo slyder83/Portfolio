@@ -19,30 +19,66 @@ Para retomar la sesión desde donde lo dejamos:
    consulta cambios.md para el contexto»).
 
 4. **Estado actual / punto de retomada:**
-   - **Rama de git:** `feat/phase-2-remaing`. Working tree limpio, Fases 2d y 2g
-      commiteadas y pusheadas.
+   - **Rama de git:** `feat/phase-2-remaing`. Working tree limpio, TODAS las fases de la
+      rama (2f, 2e, 2d, 2g, 2h) commiteadas y pusheadas. Lista para merge a `main`.
    - **Refactorización completa (C2–C8):** mergeada desde `refactor/code-quality` a `main`
       (commit `172668a`). C1 (TypeScript) descartada por decisión del usuario.
    - **Auditoría de ciberseguridad completada y mergeada** (07/09/2026).
    - **Tareas pendientes (nueva rama `feat/phase-2-remaing`, por orden de prioridad):**
-      f) CI/CD (lint + build automáticos) → **completada** (workflow verificado en GitHub Actions)
-      e) Tests (TDD / browser-testing) → **completada** (9 unit + 13 E2E, CI verde)
-      d) Rendimiento (Core Web Vitals, bundle JS) → **completada** (lazy-loading del contacto: 310 kB → 274 kB)
-      g) Observabilidad (analytics, logging) → **completada** (Vercel Analytics + Speed Insights)
-      h) Checklist de lanzamiento → pendiente
+      f) CI/CD → **completada** (workflow verificado en GitHub Actions)
+      e) Tests → **completada** (9 unit + 13 E2E, CI verde)
+      d) Rendimiento → **completada** (lazy-loading del contacto: 310 kB → 274 kB)
+      g) Observabilidad → **completada** (Vercel Analytics + Speed Insights)
+      h) Checklist de lanzamiento → **completada** (revisado abajo; pendientes solo 2 acciones del usuario en el dashboard de Vercel)
 
 ---
 
-**Nota final de esta sesión:** refactorización C2-C8 completada y pusheada en
-`refactor/code-quality`. C1 (TypeScript) descartada. Auditoría de ciberseguridad
-completada con remediación (sendForm → send, maxLength, cooldown 30s, vercel.json
-con 5 security headers). Fases 2f (CI/CD), 2e (tests), 2d (rendimiento) y 2g
-(observabilidad) completadas en `feat/phase-2-remaing`. Siguiente: h) checklist
-de lanzamiento.
+**Nota final de esta sesión:** con esta fase se cierra la rama `feat/phase-2-remaing`.
+Las 5 fases pendientes (CI/CD, tests, rendimiento, observabilidad y checklist de
+lanzamiento) están completadas y validadas. Pendiente del usuario: habilitar Web
+Analytics + Speed Insights en el dashboard de Vercel tras el merge y confirmar que las
+variables `VITE_EMAILJS_*` ya están configuradas en Vercel.
 
 ## Últimos cambios
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
+
+### 07/09/2026 — Fase 2h: checklist de lanzamiento en `feat/phase-2-remaing`
+
+Revisión final pre-merge siguiendo el skill `shipping-and-launch`, adaptado a SPA
+estática en Vercel (sin backend, DB, auth ni feature flags).
+
+**Estado del checklist:**
+
+| Área | Estado | Evidencia |
+|------|--------|-----------|
+| Tests unit + E2E | ✅ | 9 Vitest + 13 Playwright verdes |
+| Build sin warnings | ✅ | `npm run build` OK; lint ✅; format ✅; sin TS (JSX) |
+| Sin TODO / console.log | ✅ | grep limpio en `src/` y `tests/` |
+| npm audit | ✅ | 0 vulnerabilidades |
+| Sin secretos en git | ✅ | `.env` ignorado; `.env.example` con placeholders |
+| Validación de entrada | ✅ | `validateContact` + `maxLength` + cooldown 30s (fase seguridad) |
+| Headers de seguridad en prod | ✅ | verificados con `curl` en producción (5 headers + HSTS) |
+| Core Web Vitals | ✅ | Lighthouse 100; Speed Insights (RUM) al habilitar en dashboard |
+| Imágenes optimizadas | ✅ | WebP + `loading="lazy"` + dimensiones |
+| Bundle dentro de presupuesto | ✅ | 278 kB (89 kB gzip) |
+| Accesibilidad | ✅ | skip link, contraste AA, teclado, `aria-*`, Lighthouse sin warnings |
+| SEO | ✅ | `lang=es`, title, description, canonical, OG/Twitter, structured data, robots.txt, sitemap.xml, favicon |
+| Env vars en producción | ⚠️ | confirmar en Vercel que `VITE_EMAILJS_SERVICE_ID/TEMPLATE_ID/PUBLIC_KEY` están definidas (form de contacto verificado en prod en sesiones anteriores) |
+| Logging/errores | ✅ | Analytics + Speed Insights (Sentry descartado por decisión del usuario) |
+| DNS/SSL/CDN | ✅ | Vercel (HSTS + CDN global, dominio por defecto) |
+| Rollback | ✅ | vercel.json + `git revert`; rollback instantáneo en dashboard de Vercel a un deploy anterior |
+
+**Cambios de código (cierre):**
+- `vite.config.js`: el plugin `rollup-plugin-visualizer` ahora **solo se activa con
+  `ANALYZE=1`** y escribe fuera de `dist/` (`stats.html` en raíz). Antes generaba
+  `dist/stats.html` en cada build → se habría **desplegado a producción** como artefacto
+  de debug. `stats.html` añadido a `.gitignore`.
+- `package.json`: nuevo script `analyze` (`ANALYZE=1 vite build`).
+
+**Acciones del usuario (post-merge, en dashboard de Vercel):**
+1. Habilitar **Web Analytics** y **Speed Insights** (Analytics → Enable).
+2. Si el form de contacto no funciona en prod, revisar env vars `VITE_EMAILJS_*`.
 
 ### 07/09/2026 — Fase 2g: observabilidad (Vercel Analytics + Speed Insights) en `feat/phase-2-remaing`
 

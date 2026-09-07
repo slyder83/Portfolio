@@ -13,6 +13,7 @@
         "test": "vitest run",
         "test:watch": "vitest",
         "test:e2e": "playwright test",
+        "analyze": "ANALYZE=1 vite build",
         "generate-og": "node scripts/generate-og.js",
         "convert-projects": "node scripts/convert-projects.js"
     },
