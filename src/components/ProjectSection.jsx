@@ -1,76 +1,6 @@
 import { ArrowRight, ExternalLink, Github } from "lucide-react"
-
-const projects = [
-    {
-        id: 1,
-        title: "Sistema de reservas para restaurante",
-        description:
-            "Aplicación web responsive para gestionar reservas online, con panel de administración y notificaciones por correo electrónico.",
-        image: "/projects/tfg-reservas.webp",
-        imageWidth: 2514,
-        imageHeight: 2158,
-        tags: ["PHP", "MySQL", "JavaScript", "CSS", "HTML"],
-        demoUrl: null,
-        githubUrl: "https://github.com/slyder83/ProyectoFinGrado",
-    },
-    {
-        id: 2,
-        title: "Gestor de vehículos para autoescuelas",
-        description:
-            "Aplicación para controlar vehículos, partes de accidentes y seguros usando almacenamiento como Dropbox sin base de datos.",
-        image: "/projects/autoescuela.webp",
-        imageWidth: 2384,
-        imageHeight: 1586,
-        tags: ["JavaScript", "JSON", "Electron", "HTML", "CSS"],
-        demoUrl: null,
-        githubUrl: "https://github.com/slyder83/Autoescuela",
-    },
-    {
-        id: 3,
-        title: "Efemérides de Videojuegos | Retro Gaming",
-        description:
-            "Descubre las efemérides más destacadas del mundo de los videojuegos. Cada día, un vistazo a la historia del gaming con un toque retro.",
-        image: "/projects/efemerides-videojuegos.webp",
-        imageWidth: 2006,
-        imageHeight: 1610,
-        tags: [
-            "JavaScript",
-            "TypeScript",
-            "React",
-            "Next.js",
-            "Tailwind CSS",
-            "PostCSS",
-            "Node.js",
-            "Supabase",
-        ],
-        demoUrl: "https://efemerides-videojuegos.vercel.app/",
-        githubUrl: "https://github.com/slyder83/efemerides-videojuegos",
-    },
-    {
-        id: 4,
-        title: "Buscador de Clima por Ciudad",
-        description:
-            "Aplicación web sencilla donde puedes buscar cualquier ciudad o pueblo y obtener los datos meteorológicos actuales usando JavaScript, HTML y CSS puro, sin frameworks.",
-        image: "/projects/fem-weather.webp",
-        imageWidth: 1326,
-        imageHeight: 825,
-        tags: ["JavaScript", "HTML", "CSS", "API"],
-        demoUrl: "https://fem-weather.vercel.app/",
-        githubUrl: "https://github.com/slyder83/fem-weather",
-    },
-    {
-        id: 5,
-        title: "Victory Royale Timer - Cuenta Regresiva Fortnite",
-        description:
-            "Web ligera y moderna que muestra cuánto falta para la nueva temporada de Fortnite. Diseño gaming, rápido y con cuenta atrás precisa.",
-        image: "/projects/victory-royale-timer.webp",
-        imageWidth: 3242,
-        imageHeight: 2638,
-        tags: ["JavaScript", "HTML", "CSS"],
-        demoUrl: "https://victory-royale-timer.vercel.app/",
-        githubUrl: "",
-    },
-]
+import { projects } from "@/data/projects"
+import { site } from "@/config/site"
 
 export const ProjectSection = () => {
     return (
@@ -153,7 +83,7 @@ export const ProjectSection = () => {
                 </div>
                 <div className="text-center mt-12">
                     <a
-                        href="https://github.com/slyder83"
+                        href={site.githubUrl}
                         className="cosmic-button w-fit flex items-center mx-auto gap-2"
                         target="_blank"
                         rel="noopener noreferrer"

@@ -48,6 +48,41 @@ Completadas: a) verificación producción, b) revisión de código, c) seguridad
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
 
+### 07/09/2026 — Refactorización Fase 3 (Config centralizada — C4) en `refactor/code-quality`
+
+Auditoría (C4): constantes duplicadas a lo largo del código → centralizadas en un módulo
+de configuración.
+
+**Nuevo `src/config/site.js`:** `name`, `ownerEmail`, `githubUrl`, `linkedinUrl`, `url`.
+
+| Archivo | Constantes reemplazadas |
+|---------|-------------------------|
+| `ContactSection.jsx` | email (`mailto` + toast), LinkedIn URL, GitHub URL → `site.*` |
+| `ProjectSection.jsx` | "Ver más en GitHub" URL → `site.githubUrl` |
+| `Navbar.jsx` | nombre "Roberto Ceñera" → `site.name`; `navItems` extraído a `src/data/nav.js` |
+| `Footer.jsx` | nombre → `site.name` |
+
+**Validación:** lint ✅ · build ✅ · Playwright: email, linkedin, github y nombre
+renderizan desde config; 0 errores de consola.
+
+---
+
+### 07/09/2026 — Refactorización Fase 2 (Extracción de datos — C2) en `refactor/code-quality`
+
+Auditoría (C2): datos de negocio embebidos en componentes → extraídos a módulos de datos.
+
+| Archivo | Antes | Después |
+|---------|-------|---------|
+| `SkillsSection.jsx` | `skills` (18) y `categories` (4) hardcodeados | import desde `@/data/skills` |
+| `ProjectSection.jsx` | `projects` (5) hardcodeados | import desde `@/data/projects` |
+| **Nuevo** `src/data/skills.js` | — | export `skills` + `categories` |
+| **Nuevo** `src/data/projects.js` | — | export `projects` |
+
+**Validación:** lint ✅ · build ✅ · Playwright: 18 skills, 5 proyectos, 3 demo links,
+5 github links, 0 errores de consola. Sin cambio visual.
+
+---
+
 ### 07/09/2026 — Refactorización Fase 1 (Quick wins) en `refactor/code-quality`
 
 Creada rama `refactor/code-quality` desde `main` (tras merge del PR #3 de fase 2).
