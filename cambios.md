@@ -25,7 +25,7 @@ Para retomar la sesión desde donde lo dejamos:
       (commit `172668a`). C1 (TypeScript) descartada por decisión del usuario.
    - **Auditoría de ciberseguridad completada y mergeada** (07/09/2026).
    - **Tareas pendientes (nueva rama `feat/phase-2-remaing`, por orden de prioridad):**
-      f) CI/CD (lint + build automáticos) → **en curso**
+      f) CI/CD (lint + build automáticos) → **completada** (workflow verificado en GitHub Actions)
       e) Tests (TDD / browser-testing) → pendiente
       d) Rendimiento (Core Web Vitals, bundle JS) → pendiente
       g) Observabilidad (analytics, logging) → pendiente
