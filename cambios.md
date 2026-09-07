@@ -48,6 +48,30 @@ Completadas: a) verificación producción, b) revisión de código, c) seguridad
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
 
+### 07/09/2026 — Refactorización Fase 7 (Accesibilidad — C8) en `refactor/code-quality`
+
+Auditoría (C8): filtros de categorías sin semántica de estado (no anunciaban el seleccionado),
+menú móvil sin cierre por teclado, barras de skill sin semántica accesible.
+
+**Cambios en `src/components/Navbar.jsx` (menú móvil):**
+- Cierre con tecla `Escape` (`useCallback` + listener global mientras está abierto)
+- Al cerrar, el foco vuelve al botón del menú (`toggleButtonRef`)
+- Botón toggle con `aria-expanded` + `aria-controls="mobile-menu"`
+- Overlay con `id="mobile-menu"` y `aria-hidden` cuando está cerrado (los enlaces ocultos
+  dejan de ser anunciados por lectores de pantalla)
+
+**Cambios en `src/components/SkillsSection.jsx`:**
+- Botones de categoría con `aria-pressed={activeCategory === id}` (semántica de botón toggle)
+- Barras de nivel con `role="progressbar"`, `aria-valuenow/min/max` y etiqueta accesible
+  (`Nivel en {nombre}: {nivel}%`)
+
+**Validación:** lint ✅ · build ✅ · Playwright: `aria-pressed` alterna al pulsar filtros
+(true en seleccionado, false en los demás), 4 `progressbar` del backend con `valuenow`
+correcto, menú se abre (`aria-expanded=true`), cierra con Escape y el foco vuelve al toggle,
+0 errores de consola.
+
+---
+
 ### 07/09/2026 — Refactorización Fase 6 (Limpieza de `index.css` — C6) en `refactor/code-quality`
 
 Auditoría (C6): CSS con código muerto (utility `cosmic-button` y token `--color-button-text`

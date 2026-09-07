@@ -26,6 +26,7 @@ export const SkillsSection = () => {
                             variant={
                                 activeCategory === id ? "default" : "secondary"
                             }
+                            aria-pressed={activeCategory === id}
                             onClick={() => setActiveCategory(id)}
                         >
                             {label}
@@ -48,6 +49,11 @@ export const SkillsSection = () => {
                                 <div
                                     className="bg-primary h-2 rounded-full origin-left animate-grow"
                                     style={{ width: skill.level + "%" }}
+                                    role="progressbar"
+                                    aria-valuenow={skill.level}
+                                    aria-valuemin={0}
+                                    aria-valuemax={100}
+                                    aria-label={`Nivel en ${skill.name}: ${skill.level}%`}
                                 />
                             </div>
 
