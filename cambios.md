@@ -19,29 +19,171 @@ Para retomar la sesión desde donde lo dejamos:
    consulta cambios.md para el contexto»).
 
 4. **Estado actual / punto de retomada:**
-   - **Rama de git:** `refactor/code-quality`. Working tree con cambios sin commitear
-      (auditoría ciberseguridad + vercel.json + mejoras formulario).
-   - **Refactorización completa (C2–C8):** fases 1-8 todas pusheadas en `refactor/code-quality`
-      (commits `07fb828`–`95a86c1`). C1 (TypeScript) descartada por decisión del usuario.
-   - **Auditoría de ciberseguridad completada** (07/09/2026).
-   - **Tareas pendientes de `cambios.md`:**
-      d) Rendimiento (Core Web Vitals, bundle JS).
-      e) Tests (TDD / browser-testing).
-      f) CI/CD (lint + build automáticos).
-      g) Observabilidad (analytics, logging).
-      h) Checklist de lanzamiento.
+   - **Rama de git:** `feat/phase-2-remaing`. Working tree limpio, TODAS las fases de la
+      rama (2f, 2e, 2d, 2g, 2h) commiteadas y pusheadas. Lista para merge a `main`.
+   - **Refactorización completa (C2–C8):** mergeada desde `refactor/code-quality` a `main`
+      (commit `172668a`). C1 (TypeScript) descartada por decisión del usuario.
+   - **Auditoría de ciberseguridad completada y mergeada** (07/09/2026).
+   - **Tareas pendientes (nueva rama `feat/phase-2-remaing`, por orden de prioridad):**
+      f) CI/CD → **completada** (workflow verificado en GitHub Actions)
+      e) Tests → **completada** (9 unit + 13 E2E, CI verde)
+      d) Rendimiento → **completada** (lazy-loading del contacto: 310 kB → 274 kB)
+      g) Observabilidad → **completada** (Vercel Analytics + Speed Insights)
+      h) Checklist de lanzamiento → **completada** (revisado abajo; pendientes solo 2 acciones del usuario en el dashboard de Vercel)
 
 ---
 
-**Nota final de esta sesión:** refactorización C2-C8 completada y pusheada en
-`refactor/code-quality`. C1 (TypeScript) descartada. Auditoría de ciberseguridad
-completada con remediación (sendForm → send, maxLength, cooldown 30s, vercel.json
-con 5 security headers). Pendientes de fase 2: rendimiento, tests, CI/CD,
-observabilidad, checklist.
+**Nota final de esta sesión:** con esta fase se cierra la rama `feat/phase-2-remaing`.
+Las 5 fases pendientes (CI/CD, tests, rendimiento, observabilidad y checklist de
+lanzamiento) están completadas y validadas. Pendiente del usuario: habilitar Web
+Analytics + Speed Insights en el dashboard de Vercel tras el merge y confirmar que las
+variables `VITE_EMAILJS_*` ya están configuradas en Vercel.
 
 ## Últimos cambios
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
+
+### 07/09/2026 — Fase 2h: checklist de lanzamiento en `feat/phase-2-remaing`
+
+Revisión final pre-merge siguiendo el skill `shipping-and-launch`, adaptado a SPA
+estática en Vercel (sin backend, DB, auth ni feature flags).
+
+**Estado del checklist:**
+
+| Área | Estado | Evidencia |
+|------|--------|-----------|
+| Tests unit + E2E | ✅ | 9 Vitest + 13 Playwright verdes |
+| Build sin warnings | ✅ | `npm run build` OK; lint ✅; format ✅; sin TS (JSX) |
+| Sin TODO / console.log | ✅ | grep limpio en `src/` y `tests/` |
+| npm audit | ✅ | 0 vulnerabilidades |
+| Sin secretos en git | ✅ | `.env` ignorado; `.env.example` con placeholders |
+| Validación de entrada | ✅ | `validateContact` + `maxLength` + cooldown 30s (fase seguridad) |
+| Headers de seguridad en prod | ✅ | verificados con `curl` en producción (5 headers + HSTS) |
+| Core Web Vitals | ✅ | Lighthouse 100; Speed Insights (RUM) al habilitar en dashboard |
+| Imágenes optimizadas | ✅ | WebP + `loading="lazy"` + dimensiones |
+| Bundle dentro de presupuesto | ✅ | 278 kB (89 kB gzip) |
+| Accesibilidad | ✅ | skip link, contraste AA, teclado, `aria-*`, Lighthouse sin warnings |
+| SEO | ✅ | `lang=es`, title, description, canonical, OG/Twitter, structured data, robots.txt, sitemap.xml, favicon |
+| Env vars en producción | ⚠️ | confirmar en Vercel que `VITE_EMAILJS_SERVICE_ID/TEMPLATE_ID/PUBLIC_KEY` están definidas (form de contacto verificado en prod en sesiones anteriores) |
+| Logging/errores | ✅ | Analytics + Speed Insights (Sentry descartado por decisión del usuario) |
+| DNS/SSL/CDN | ✅ | Vercel (HSTS + CDN global, dominio por defecto) |
+| Rollback | ✅ | vercel.json + `git revert`; rollback instantáneo en dashboard de Vercel a un deploy anterior |
+
+**Cambios de código (cierre):**
+- `vite.config.js`: el plugin `rollup-plugin-visualizer` ahora **solo se activa con
+  `ANALYZE=1`** y escribe fuera de `dist/` (`stats.html` en raíz). Antes generaba
+  `dist/stats.html` en cada build → se habría **desplegado a producción** como artefacto
+  de debug. `stats.html` añadido a `.gitignore`.
+- `package.json`: nuevo script `analyze` (`ANALYZE=1 vite build`).
+
+**Acciones del usuario (post-merge, en dashboard de Vercel):**
+1. Habilitar **Web Analytics** y **Speed Insights** (Analytics → Enable).
+2. Si el form de contacto no funciona en prod, revisar env vars `VITE_EMAILJS_*`.
+
+### 07/09/2026 — Fase 2g: observabilidad (Vercel Analytics + Speed Insights) en `feat/phase-2-remaing`
+
+Decidido con el usuario: analytics + Web Vitals reales de Vercel (no cookies, sin
+banner de consentimiento, datos anonimizados). Sentry descartado para este proyecto.
+
+**Implementación:**
+- `src/main.jsx`: `inject()` de `@vercel/analytics` v2.0.1 y componente `<SpeedInsights />`
+  de `@vercel/speed-insights` v2.0.0 (react), **solo cuando `import.meta.env.PROD`**.
+  En dev/local los paquetes ni se cargan (guard de la propia lib con `process.env.NODE_ENV`),
+  así los tests E2E siguen sin ruido ni requests extra.
+- Revisión del código de los paquetes v2: cargan scripts **same-origin**
+  (`/_vercel/insights/script.js` y `/_vercel/speed-insights/script.js`), que Vercel
+  sirve al activar las features en el dashboard. Sin integraciones inline → compatibles
+  con nuestra CSP.
+- `vercel.json`: ampliada `connect-src` con `https://va.vercel-scripts.com` y
+  `https://vitals.vercel-insights.com` para que los beacons no queden bloqueados por
+  nuestra propia cabecera CSP.
+
+**Impacto de bundle:** +4.13 kB raw (+1.36 kB gzip) en el chunk principal.
+
+**Validación:** lint ✅ · format ✅ · build ✅ · 9 unit ✅ · 13 E2E ✅ (el test de
+"0 errores de consola" confirma que en dev no se dispara nada).
+
+**Acción pendiente en el dashboard de Vercel (1 clic, tras hacer deploy):**
+1. Proyecto → **Analytics** → Enable (**Web Analytics**).
+2. Proyecto → **Speed Insights** → disponible gratis en todos los planes (con **RES**).
+   La retención en el plan Hobby es de 14 días (Speed Insights Plus es de pago).
+   Tras unos días de visitas aparecerán las métricas. Si no llegan datos, revisar que
+   la CSP de `vercel.json` incluya los dominios añadidos arriba.
+
+### 07/09/2026 — Fase 2d: rendimiento (bundle JS) en `feat/phase-2-remaing`
+
+Baseline medido (Lighthouse sobre producción, ya era excelente): **Score 100**, FCP 1.4s,
+LCP 1.4s, CLS 0, TBT 10ms, Speed Index 1.4s. Bundle JS: 310.22 kB (98.89 kB gzip).
+
+**Análisis del bundle** (`rollup-plugin-visualizer` v7.1.1, plugin real para Vite 8/Rolldown):
+la descomposición del estadístico (sizes pre-minificados, no fiables al 100%) confirmó que
+el bundle usaba React 19 de **producción** (sin `react-dom.development`), `lucide-react`
+ya estaba tree-shakeado (~5 kB gzip) y no había imágenes. El grueso era `react-dom`,
+`react-router` y la pila de toasts Radix.
+
+**Optimización aplicada — código-splitting del bloque de contacto:**
+- `src/pages/Home.jsx`: `ContactSection` ahora se carga con `React.lazy` + `Suspense`
+  (fallback con el mismo fondo `bg-secondary` y altura aproximada para no mover el layout).
+- `src/App.jsx`: `<Toaster />` salía del bundle inicial al mudarlo a `ContactSection.jsx`
+  (solo la sección de contacto dispara toasts). Así `@emailjs/browser` + toda la pila
+  Radix de toasts dejan el chunk principal y se agrupan en el chunk lazy.
+
+**Resultado:**
+| Chunk | Antes | Después |
+|-------|-------|---------|
+| Principal | 310.22 kB (98.89 kB gz) | **273.79 kB (87.82 kB gz)** |
+| `ContactSection` (lazy) | — | 36.78 kB (12.04 kB gz) |
+
+`@emailjs` + Radix ya no se parsean ni ejecutan en la carga inicial; se descargan en
+paralelo con el arranque.
+
+**Validación:** lint ✅ · format ✅ · 9 tests unit ✅ · 13 tests E2E ✅ (los toasts del
+formulario siguen funcionando con el provider anidado en la sección) · build ✅.
+
+### 07/09/2026 — Fase 2e: tests (unit + E2E) en `feat/phase-2-remaing`
+
+Pirámide de tests según TDD (RED → GREEN → REFACTOR).
+
+**Unitarios (Vitest 5, compatible con Vite 8):**
+- Extraída la validación del formulario de `ContactSection.jsx` a `src/lib/validation.js`
+  (función pura `validateContact` + constantes `NAME_MIN/MAX`, `EMAIL_MAX`, `MESSAGE_MIN/MAX`)
+- `src/lib/validation.test.js` con 9 casos (válido, trim, nombre corto/largo, email inválido/
+  vacío, mensaje corto/exacto/largo) → 9/9 ✅
+- `ContactSection.jsx` ahora usa `validateContact` y `noValidate` (la validación nativa del
+  navegador bloqueaba el submit antes que nuestros toasts en español)
+
+**E2E (Playwright, `tests/`):**
+- `navigation.spec.js`: home con todas las secciones, links del navbar, 404
+- `contact.spec.js`: toasts de validación (nombre/email/mensaje), `maxLength` del DOM,
+  cooldown 30s (con `page.route` interceptando `api.emailjs.com`)
+- `features.spec.js`: theme toggle, filtros de skills (`aria-pressed`), `progressbar`,
+  `rel="noopener noreferrer"` en externos, 0 errores de consola
+- 13/13 ✅
+
+**Config:** `playwright.config.js` (dev server autolanzado en :5199, env dummy para EmailJS),
+`vitest.config.js` (solo `src/**/*.test.js`), scripts `test`, `test:watch`, `test:e2e` en
+package.json, `noopener` reutilizado. ESLint ahora incluye globals de node (playwright.config).
+
+**CI (`ci.yml`):** job `quality` ampliado con tests unitarios; nuevo job `e2e` con
+`playwright install --with-deps chromium`. **Verificado en GitHub Actions**: run #3
+completado con éxito (ambas jobs, incluyendo E2E en CI real).
+
+### 07/09/2026 — Fase 2f: CI/CD en GitHub Actions en `feat/phase-2-remaing`
+
+Nuevo flujo `.github/workflows/ci.yml` que se ejecuta en cada push/PR a `main`:
+
+1. `npm ci` (dependencias exactas desde `package-lock.json`)
+2. `format:check` (Prettier — falla si hay código sin formatear)
+3. `lint` (ESLint)
+4. `build` de producción (Vite)
+5. Upload del artefacto `dist/`
+
+Node 22, timeout 10 min, cache de npm. El workflow valida que `main` nunca acepte
+código que no formatee/lintee/compile. Los tests de Playwright (fase 2e) se añadirán
+a este mismo workflow cuando existan.
+
+**Extra:** Prettier había quedado pendiente en `src/components/ContactSection.jsx`
+(la línea del toast de longitud de mensaje) — formateada.
 
 ### 07/09/2026 — Refactorización Fase 8 (Documentación — C5) en `refactor/code-quality`
 

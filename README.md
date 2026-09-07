@@ -36,14 +36,14 @@ npm run dev   # servidor de desarrollo en http://localhost:5173
 
 ### Scripts disponibles
 
-| Script | Descripción |
-|--------|-------------|
-| `npm run dev` | Servidor de desarrollo con hot-reload |
-| `npm run build` | Compila la aplicación para producción |
-| `npm run preview` | Previsualiza el build de producción |
-| `npm run lint` | Análisis estático con ESLint |
-| `npm run format` | Formatea el código con Prettier |
-| `npm run format:check` | Verifica el formato sin modificar |
+| Script                 | Descripción                           |
+| ---------------------- | ------------------------------------- |
+| `npm run dev`          | Servidor de desarrollo con hot-reload |
+| `npm run build`        | Compila la aplicación para producción |
+| `npm run preview`      | Previsualiza el build de producción   |
+| `npm run lint`         | Análisis estático con ESLint          |
+| `npm run format`       | Formatea el código con Prettier       |
+| `npm run format:check` | Verifica el formato sin modificar     |
 
 ---
 

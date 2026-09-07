@@ -5,6 +5,15 @@ import { useState, useRef } from "react"
 import emailjs from "@emailjs/browser"
 import { site } from "@/config/site"
 import { Button } from "@/components/ui/button"
+import { Toaster } from "@/components/ui/toaster"
+import {
+    validateContact,
+    NAME_MIN,
+    NAME_MAX,
+    EMAIL_MAX,
+    MESSAGE_MIN,
+    MESSAGE_MAX,
+} from "@/lib/validation"
 
 export const ContactSection = () => {
     const { toast } = useToast()
@@ -16,9 +25,21 @@ export const ContactSection = () => {
         e.preventDefault()
 
         const formData = new FormData(formRef.current)
-        const name = String(formData.get("name") ?? "").trim()
-        const email = String(formData.get("email") ?? "").trim()
-        const message = String(formData.get("message") ?? "").trim()
+        const { valid, errors, values } = validateContact({
+            name: String(formData.get("name") ?? ""),
+            email: String(formData.get("email") ?? ""),
+            message: String(formData.get("message") ?? ""),
+        })
+
+        if (!valid) {
+            const firstError = Object.values(errors)[0]
+            toast({
+                title: "Datos no válidos",
+                description: firstError,
+                variant: "destructive",
+            })
+            return
+        }
 
         const elapsed = Date.now() - lastSentAt.current
         const cooldownMs = 30000
@@ -32,33 +53,6 @@ export const ContactSection = () => {
             return
         }
 
-        if (name.length < 2 || name.length > 100) {
-            toast({
-                title: "Nombre no válido",
-                description: "El nombre debe tener entre 2 y 100 caracteres.",
-                variant: "destructive",
-            })
-            return
-        }
-
-        if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            toast({
-                title: "Correo no válido",
-                description: "Introduce una dirección de correo válida.",
-                variant: "destructive",
-            })
-            return
-        }
-
-        if (message.length < 10 || message.length > 5000) {
-            toast({
-                title: "Mensaje no válido",
-                description: "El mensaje debe tener entre 10 y 5000 caracteres.",
-                variant: "destructive",
-            })
-            return
-        }
-
         lastSentAt.current = Date.now()
         setIsSubmitting(true)
 
@@ -66,7 +60,7 @@ export const ContactSection = () => {
             .send(
                 import.meta.env.VITE_EMAILJS_SERVICE_ID,
                 import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-                { name, email, message },
+                values,
                 import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
             )
             .then(() => {
@@ -89,6 +83,7 @@ export const ContactSection = () => {
 
     return (
         <section id="contact" className="py-24 px-4 relative bg-secondary">
+            <Toaster />
             <div className="container mx-auto max-w-5xl">
                 <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
                     Ponte en <span className="text-primary">Contacto</span>
@@ -170,6 +165,7 @@ export const ContactSection = () => {
                         <form
                             ref={formRef}
                             onSubmit={handleSubmit}
+                            noValidate
                             className="space-y-6"
                         >
                             <div>
@@ -185,8 +181,8 @@ export const ContactSection = () => {
                                     name="name"
                                     placeholder="Introduce tu nombre"
                                     className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                                    minLength={2}
-                                    maxLength={100}
+                                    minLength={NAME_MIN}
+                                    maxLength={NAME_MAX}
                                     required
                                 />
                             </div>
@@ -204,7 +200,7 @@ export const ContactSection = () => {
                                     name="email"
                                     placeholder="Introduce tu correo electrónico"
                                     className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                                    maxLength={254}
+                                    maxLength={EMAIL_MAX}
                                     required
                                 />
                             </div>
@@ -222,8 +218,8 @@ export const ContactSection = () => {
                                     placeholder="Escribe tu mensaje aquí"
                                     className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary resize-none"
                                     rows={5}
-                                    minLength={10}
-                                    maxLength={5000}
+                                    minLength={MESSAGE_MIN}
+                                    maxLength={MESSAGE_MAX}
                                     required
                                 />
                             </div>

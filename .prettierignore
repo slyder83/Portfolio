@@ -5,4 +5,6 @@ cambios.md
 /public
 src/components/ui
 src/hooks/use-toast.js
+.prettierrc.json
+skills-lock.json
 scripts

@@ -25,3 +25,10 @@ dist-ssr
 
 # Environment variables
 .env
+
+# Test artifacts
+test-results
+playwright-report
+
+# Bundle analysis (ANALYZE=1 npm run build)
+stats.html
