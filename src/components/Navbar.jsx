@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react"
 import { ThemeToggle } from "./ThemeToggle"
 import { navItems } from "@/data/nav"
 import { site } from "@/config/site"
+import { Button } from "@/components/ui/button"
 
 export const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false)
@@ -65,13 +66,15 @@ export const Navbar = () => {
                 </div>
 
                 {/* Mobile nav button */}
-                <button
+                <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={toggleMenu}
-                    className="md:hidden p-2 text-foreground z-50"
+                    className="md:hidden z-50"
                     aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
                 >
                     {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                </button>
+                </Button>
 
                 {/* Mobile menu (SOLUCIÓN CLAVE) */}
                 <div

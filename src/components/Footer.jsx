@@ -1,5 +1,6 @@
 import { ArrowUp } from "lucide-react"
 import { site } from "@/config/site"
+import { Button } from "@/components/ui/button"
 
 const currentYear = new Date().getFullYear()
 
@@ -15,13 +16,16 @@ export const Footer = () => {
                     . Todos los derechos reservados.
                 </p>
 
-                <a
-                    href="#hero"
-                    aria-label="Volver arriba"
-                    className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors duration-300 hover:scale-110"
+                <Button
+                    asChild
+                    variant="ghost"
+                    size="icon"
+                    className="bg-primary/10 hover:bg-primary/20 text-primary hover:scale-110"
                 >
-                    <ArrowUp size={20} />
-                </a>
+                    <a href="#hero" aria-label="Volver arriba">
+                        <ArrowUp size={20} />
+                    </a>
+                </Button>
             </div>
         </footer>
     )

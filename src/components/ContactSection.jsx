@@ -4,6 +4,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useState, useRef } from "react"
 import emailjs from "@emailjs/browser"
 import { site } from "@/config/site"
+import { Button } from "@/components/ui/button"
 
 export const ContactSection = () => {
     const { toast } = useToast()
@@ -175,11 +176,11 @@ export const ContactSection = () => {
                                 />
                             </div>
 
-                            <button
+                            <Button
                                 type="submit"
                                 disabled={isSubmitting}
                                 className={cn(
-                                    "cosmic-button w-full flex items-center justify-center gap-2",
+                                    "w-full",
                                     isSubmitting &&
                                         "opacity-50 cursor-not-allowed",
                                 )}
@@ -188,7 +189,7 @@ export const ContactSection = () => {
                                     ? "Enviando..."
                                     : "Enviar mensaje"}
                                 <Send size={16} />
-                            </button>
+                            </Button>
                         </form>
                     </div>
                 </div>

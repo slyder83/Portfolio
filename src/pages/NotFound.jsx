@@ -1,5 +1,6 @@
 import { ThemeToggle } from "../components/ThemeToggle"
 import { StarBackground } from "../components/StarBackground"
+import { Button } from "@/components/ui/button"
 import { useNavigate } from "react-router-dom"
 
 export const NotFound = () => {
@@ -19,9 +20,7 @@ export const NotFound = () => {
                 <p className="text-lg mb-6">
                     Lo siento, la página que buscas no existe.
                 </p>
-                <button onClick={() => navigate("/")} className="cosmic-button">
-                    Volver al inicio
-                </button>
+                <Button onClick={() => navigate("/")}>Volver al inicio</Button>
             </main>
         </div>
     )

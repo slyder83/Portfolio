@@ -1,4 +1,5 @@
 import { ArrowDown } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export const HeroSection = () => {
     return (
@@ -30,9 +31,9 @@ export const HeroSection = () => {
                     </p>
 
                     <div className="opacity-0 pt-4 animate-fade-in-delay-4">
-                        <a href="#projects" className="cosmic-button">
-                            Ver mis proyectos
-                        </a>
+                        <Button asChild>
+                            <a href="#projects">Ver mis proyectos</a>
+                        </Button>
                     </div>
                 </div>
             </div>

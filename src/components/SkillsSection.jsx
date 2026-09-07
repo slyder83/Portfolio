@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { cn } from "@/lib/utils"
 import { categories, skills } from "@/data/skills"
+import { Button } from "@/components/ui/button"
 
 export const SkillsSection = () => {
     const [activeCategory, setActiveCategory] = useState("all")
@@ -19,18 +19,17 @@ export const SkillsSection = () => {
 
                 <div className="flex flex-wrap justify-center gap-4 mb-12">
                     {categories.map(({ id, label }) => (
-                        <button
+                        <Button
                             key={id}
+                            size="sm"
+                            className="capitalize"
+                            variant={
+                                activeCategory === id ? "default" : "secondary"
+                            }
                             onClick={() => setActiveCategory(id)}
-                            className={cn(
-                                "capitalize",
-                                activeCategory === id
-                                    ? "cosmic-button"
-                                    : "px-5 py-2 rounded-full transition-colors duration-300 bg-secondary/70 text-foreground hover:bg-secondary",
-                            )}
                         >
                             {label}
-                        </button>
+                        </Button>
                     ))}
                 </div>
 

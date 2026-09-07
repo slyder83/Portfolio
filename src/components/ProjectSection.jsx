@@ -1,6 +1,7 @@
 import { ArrowRight, ExternalLink, Github } from "lucide-react"
 import { projects } from "@/data/projects"
 import { site } from "@/config/site"
+import { Button } from "@/components/ui/button"
 
 export const ProjectSection = () => {
     return (
@@ -82,14 +83,20 @@ export const ProjectSection = () => {
                     ))}
                 </div>
                 <div className="text-center mt-12">
-                    <a
-                        href={site.githubUrl}
-                        className="cosmic-button w-fit flex items-center mx-auto gap-2"
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <Button
+                        asChild
+                        variant="default"
+                        size="default"
+                        className="w-fit mx-auto"
                     >
-                        Ver más en GitHub <ArrowRight size={16} />
-                    </a>
+                        <a
+                            href={site.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Ver más en GitHub <ArrowRight size={16} />
+                        </a>
+                    </Button>
                 </div>
             </div>
         </section>

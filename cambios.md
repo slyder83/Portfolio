@@ -48,7 +48,36 @@ Completadas: a) verificación producción, b) revisión de código, c) seguridad
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
 
-### 07/09/2026 — Refactorización Fase 4 (StarBackground — C3) en `refactor/code-quality`
+### 07/09/2026 — Refactorización Fase 5 (Botón reutilizable — C7) en `refactor/code-quality`
+
+Auditoría (C7): `className` de botones duplicados entre componentes (`cosmic-button`,
+`px-6 py-2 rounded-full border...`, `px-5 py-2 rounded-full...`) → extraído componente UI.
+
+**Nuevo `src/components/ui/button.jsx`** (patrón shadcn, con `cva` + `@radix-ui/react-slot`):
+- `Button` con variantes `default` (cosmic), `outline` (border primary), `secondary`
+  (filtros), `ghost` (iconos); tamaños `default/sm/lg/icon`
+- Soporte `asChild` para renderizar el mismo estilo sobre `<a>` (enlaces)
+
+| Archivo | Antes | Después |
+|---------|-------|---------|
+| `HeroSection.jsx` | `<a className="cosmic-button">` | `<Button asChild>` |
+| `AboutSection.jsx` | 2 botones (cosmic + outline) | `<Button>` y `<Button variant="outline">` |
+| `ProjectSection.jsx` | `<a className="cosmic-button w-fit flex...">` | `<Button asChild className="w-fit mx-auto">` |
+| `ContactSection.jsx` | `<button className="cosmic-button w-full flex...">` | `<Button className="w-full">` |
+| `SkillsSection.jsx` | `cn("capitalize", activo ? cosmic : bg-secondary/70)` | `<Button size="sm" variant={activo ? default : secondary}>` |
+| `NotFound.jsx` | `<button className="cosmic-button">` | `<Button onClick={navigate}>` |
+| `ThemeToggle.jsx` | `<button className="p-2 rounded-full...">` | `<Button variant="ghost" size="icon">` |
+| `Footer.jsx` | `<a className="p-2 rounded-full bg-primary/10...">` | `<Button asChild variant="ghost" size="icon">` |
+| `Navbar.jsx` | `<button className="md:hidden p-2...">` | `<Button variant="ghost" size="icon" className="md:hidden z-50">` |
+
+- `cosmic-button` ya no se referencia en ningún componente (la utility queda en CSS para C6)
+- `cn` eliminado de `SkillsSection.jsx` (sin usos restantes)
+
+**Validación:** lint ✅ · build ✅ · Playwright: enlaces de Hero/About/CV renderizan como
+botones, filtros de categorías cambian de variante al hacer click (activo → bg-primary),
+menú móvil abre/cierra, 404 funcionando, 0 errores de consola.
+
+---
 
 Auditoría (C3): lógica de generación + renderizado mezclados, funciones re-creadas en
 cada render, resize sin throttle, ~200+ elementos DOM regenerados en cada resize.
