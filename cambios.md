@@ -19,16 +19,16 @@ Para retomar la sesión desde donde lo dejamos:
    consulta cambios.md para el contexto»).
 
 4. **Estado actual / punto de retomada:**
-   - **Rama de git:** `feat/phase-2-remaing`. Working tree limpio, Fase 2d (rendimiento)
-      commiteada y pusheada.
+   - **Rama de git:** `feat/phase-2-remaing`. Working tree limpio, Fases 2d y 2g
+      commiteadas y pusheadas.
    - **Refactorización completa (C2–C8):** mergeada desde `refactor/code-quality` a `main`
       (commit `172668a`). C1 (TypeScript) descartada por decisión del usuario.
    - **Auditoría de ciberseguridad completada y mergeada** (07/09/2026).
    - **Tareas pendientes (nueva rama `feat/phase-2-remaing`, por orden de prioridad):**
       f) CI/CD (lint + build automáticos) → **completada** (workflow verificado en GitHub Actions)
       e) Tests (TDD / browser-testing) → **completada** (9 unit + 13 E2E, CI verde)
-      d) Rendimiento (Core Web Vitals, bundle JS) → **completada** (lazy-loading del contacto: 310 kB → 274 kB; ver entrada abajo)
-      g) Observabilidad (analytics, logging) → pendiente
+      d) Rendimiento (Core Web Vitals, bundle JS) → **completada** (lazy-loading del contacto: 310 kB → 274 kB)
+      g) Observabilidad (analytics, logging) → **completada** (Vercel Analytics + Speed Insights)
       h) Checklist de lanzamiento → pendiente
 
 ---
@@ -36,12 +36,43 @@ Para retomar la sesión desde donde lo dejamos:
 **Nota final de esta sesión:** refactorización C2-C8 completada y pusheada en
 `refactor/code-quality`. C1 (TypeScript) descartada. Auditoría de ciberseguridad
 completada con remediación (sendForm → send, maxLength, cooldown 30s, vercel.json
-con 5 security headers). Fases 2f (CI/CD), 2e (tests) y 2d (rendimiento) completadas
-en `feat/phase-2-remaing`. Siguiente: g) observabilidad.
+con 5 security headers). Fases 2f (CI/CD), 2e (tests), 2d (rendimiento) y 2g
+(observabilidad) completadas en `feat/phase-2-remaing`. Siguiente: h) checklist
+de lanzamiento.
 
 ## Últimos cambios
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
+
+### 07/09/2026 — Fase 2g: observabilidad (Vercel Analytics + Speed Insights) en `feat/phase-2-remaing`
+
+Decidido con el usuario: analytics + Web Vitals reales de Vercel (no cookies, sin
+banner de consentimiento, datos anonimizados). Sentry descartado para este proyecto.
+
+**Implementación:**
+- `src/main.jsx`: `inject()` de `@vercel/analytics` v2.0.1 y componente `<SpeedInsights />`
+  de `@vercel/speed-insights` v2.0.0 (react), **solo cuando `import.meta.env.PROD`**.
+  En dev/local los paquetes ni se cargan (guard de la propia lib con `process.env.NODE_ENV`),
+  así los tests E2E siguen sin ruido ni requests extra.
+- Revisión del código de los paquetes v2: cargan scripts **same-origin**
+  (`/_vercel/insights/script.js` y `/_vercel/speed-insights/script.js`), que Vercel
+  sirve al activar las features en el dashboard. Sin integraciones inline → compatibles
+  con nuestra CSP.
+- `vercel.json`: ampliada `connect-src` con `https://va.vercel-scripts.com` y
+  `https://vitals.vercel-insights.com` para que los beacons no queden bloqueados por
+  nuestra propia cabecera CSP.
+
+**Impacto de bundle:** +4.13 kB raw (+1.36 kB gzip) en el chunk principal.
+
+**Validación:** lint ✅ · format ✅ · build ✅ · 9 unit ✅ · 13 E2E ✅ (el test de
+"0 errores de consola" confirma que en dev no se dispara nada).
+
+**Acción pendiente en el dashboard de Vercel (1 clic, tras hacer deploy):**
+1. Proyecto → **Analytics** → Enable (**Web Analytics**).
+2. Proyecto → **Speed Insights** → disponible gratis en todos los planes (con **RES**).
+   La retención en el plan Hobby es de 14 días (Speed Insights Plus es de pago).
+   Tras unos días de visitas aparecerán las métricas. Si no llegan datos, revisar que
+   la CSP de `vercel.json` incluya los dominios añadidos arriba.
 
 ### 07/09/2026 — Fase 2d: rendimiento (bundle JS) en `feat/phase-2-remaing`
 
