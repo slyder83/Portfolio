@@ -1,11 +1,17 @@
+import { lazy, Suspense } from "react"
 import { AboutSection } from "../components/AboutSection"
-import { ContactSection } from "../components/ContactSection"
 import { Footer } from "../components/Footer"
 import { HeroSection } from "../components/HeroSection"
 import { Navbar } from "../components/Navbar"
 import { ProjectSection } from "../components/ProjectSection"
 import { SkillsSection } from "../components/SkillsSection"
 import { StarBackground } from "../components/StarBackground"
+
+const ContactSection = lazy(() =>
+    import("../components/ContactSection").then(({ ContactSection }) => ({
+        default: ContactSection,
+    })),
+)
 
 export const Home = () => {
     return (
@@ -30,7 +36,15 @@ export const Home = () => {
                 <AboutSection />
                 <SkillsSection />
                 <ProjectSection />
-                <ContactSection />
+                <Suspense
+                    fallback={
+                        <div className="py-24 px-4 relative bg-secondary min-h-[24rem]">
+                            <div className="container mx-auto max-w-5xl"></div>
+                        </div>
+                    }
+                >
+                    <ContactSection />
+                </Suspense>
             </main>
 
             {/* Footer*/}

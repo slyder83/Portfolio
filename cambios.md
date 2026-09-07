@@ -19,16 +19,15 @@ Para retomar la sesión desde donde lo dejamos:
    consulta cambios.md para el contexto»).
 
 4. **Estado actual / punto de retomada:**
-   - **Rama de git:** `feat/phase-2-remaing`. Working tree con cambios sin commitear
-      (CI/CD en curso).
+   - **Rama de git:** `feat/phase-2-remaing`. Working tree limpio, Fase 2d (rendimiento)
+      commiteada y pusheada.
    - **Refactorización completa (C2–C8):** mergeada desde `refactor/code-quality` a `main`
       (commit `172668a`). C1 (TypeScript) descartada por decisión del usuario.
    - **Auditoría de ciberseguridad completada y mergeada** (07/09/2026).
    - **Tareas pendientes (nueva rama `feat/phase-2-remaing`, por orden de prioridad):**
       f) CI/CD (lint + build automáticos) → **completada** (workflow verificado en GitHub Actions)
       e) Tests (TDD / browser-testing) → **completada** (9 unit + 13 E2E, CI verde)
-      d) Rendimiento (Core Web Vitals, bundle JS) → pendiente
-      d) Rendimiento (Core Web Vitals, bundle JS) → pendiente
+      d) Rendimiento (Core Web Vitals, bundle JS) → **completada** (lazy-loading del contacto: 310 kB → 274 kB; ver entrada abajo)
       g) Observabilidad (analytics, logging) → pendiente
       h) Checklist de lanzamiento → pendiente
 
@@ -37,12 +36,42 @@ Para retomar la sesión desde donde lo dejamos:
 **Nota final de esta sesión:** refactorización C2-C8 completada y pusheada en
 `refactor/code-quality`. C1 (TypeScript) descartada. Auditoría de ciberseguridad
 completada con remediación (sendForm → send, maxLength, cooldown 30s, vercel.json
-con 5 security headers). Nueva rama `feat/phase-2-remaing` para las tareas restantes,
-empezando por CI/CD.
+con 5 security headers). Fases 2f (CI/CD), 2e (tests) y 2d (rendimiento) completadas
+en `feat/phase-2-remaing`. Siguiente: g) observabilidad.
 
 ## Últimos cambios
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
+
+### 07/09/2026 — Fase 2d: rendimiento (bundle JS) en `feat/phase-2-remaing`
+
+Baseline medido (Lighthouse sobre producción, ya era excelente): **Score 100**, FCP 1.4s,
+LCP 1.4s, CLS 0, TBT 10ms, Speed Index 1.4s. Bundle JS: 310.22 kB (98.89 kB gzip).
+
+**Análisis del bundle** (`rollup-plugin-visualizer` v7.1.1, plugin real para Vite 8/Rolldown):
+la descomposición del estadístico (sizes pre-minificados, no fiables al 100%) confirmó que
+el bundle usaba React 19 de **producción** (sin `react-dom.development`), `lucide-react`
+ya estaba tree-shakeado (~5 kB gzip) y no había imágenes. El grueso era `react-dom`,
+`react-router` y la pila de toasts Radix.
+
+**Optimización aplicada — código-splitting del bloque de contacto:**
+- `src/pages/Home.jsx`: `ContactSection` ahora se carga con `React.lazy` + `Suspense`
+  (fallback con el mismo fondo `bg-secondary` y altura aproximada para no mover el layout).
+- `src/App.jsx`: `<Toaster />` salía del bundle inicial al mudarlo a `ContactSection.jsx`
+  (solo la sección de contacto dispara toasts). Así `@emailjs/browser` + toda la pila
+  Radix de toasts dejan el chunk principal y se agrupan en el chunk lazy.
+
+**Resultado:**
+| Chunk | Antes | Después |
+|-------|-------|---------|
+| Principal | 310.22 kB (98.89 kB gz) | **273.79 kB (87.82 kB gz)** |
+| `ContactSection` (lazy) | — | 36.78 kB (12.04 kB gz) |
+
+`@emailjs` + Radix ya no se parsean ni ejecutan en la carga inicial; se descargan en
+paralelo con el arranque.
+
+**Validación:** lint ✅ · format ✅ · 9 tests unit ✅ · 13 tests E2E ✅ (los toasts del
+formulario siguen funcionando con el provider anidado en la sección) · build ✅.
 
 ### 07/09/2026 — Fase 2e: tests (unit + E2E) en `feat/phase-2-remaing`
 
