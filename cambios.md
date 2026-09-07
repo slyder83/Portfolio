@@ -48,6 +48,23 @@ Completadas: a) verificación producción, b) revisión de código, c) seguridad
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
 
+### 07/09/2026 — Refactorización Fase 4 (StarBackground — C3) en `refactor/code-quality`
+
+Auditoría (C3): lógica de generación + renderizado mezclados, funciones re-creadas en
+cada render, resize sin throttle, ~200+ elementos DOM regenerados en cada resize.
+
+**Cambios en `StarBackground.jsx` (de ~96 a ~50 líneas):**
+- Extraída lógica a nuevo hook `src/hooks/useStarBackground.js`: generación de stars
+  (`Array.from`) y meteors fuera del componente, `requestAnimationFrame` como throttle
+  en el resize (evita regenerar todo el fondo en cada evento de resize)
+- Extraídos subcomponentes `Star` y `Meteor` (mismo archivo, solo renderizan estilos)
+- El componente principal solo usa `useStarBackground()` y mapea subcomponentes
+
+**Validación:** lint ✅ · build ✅ · Playwright: 102 estrellas animando `pulse-subtle`,
+4 meteoros animando `meteor` con delays 0/1.25/2.5/3.75s, 0 errores de consola.
+
+---
+
 ### 07/09/2026 — Refactorización Fase 3 (Config centralizada — C4) en `refactor/code-quality`
 
 Auditoría (C4): constantes duplicadas a lo largo del código → centralizadas en un módulo
