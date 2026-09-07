@@ -53,7 +53,8 @@ export const ContactSection = () => {
         if (message.length < 10 || message.length > 5000) {
             toast({
                 title: "Mensaje no válido",
-                description: "El mensaje debe tener entre 10 y 5000 caracteres.",
+                description:
+                    "El mensaje debe tener entre 10 y 5000 caracteres.",
                 variant: "destructive",
             })
             return

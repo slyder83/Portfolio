@@ -19,29 +19,46 @@ Para retomar la sesión desde donde lo dejamos:
    consulta cambios.md para el contexto»).
 
 4. **Estado actual / punto de retomada:**
-   - **Rama de git:** `refactor/code-quality`. Working tree con cambios sin commitear
-      (auditoría ciberseguridad + vercel.json + mejoras formulario).
-   - **Refactorización completa (C2–C8):** fases 1-8 todas pusheadas en `refactor/code-quality`
-      (commits `07fb828`–`95a86c1`). C1 (TypeScript) descartada por decisión del usuario.
-   - **Auditoría de ciberseguridad completada** (07/09/2026).
-   - **Tareas pendientes de `cambios.md`:**
-      d) Rendimiento (Core Web Vitals, bundle JS).
-      e) Tests (TDD / browser-testing).
-      f) CI/CD (lint + build automáticos).
-      g) Observabilidad (analytics, logging).
-      h) Checklist de lanzamiento.
+   - **Rama de git:** `feat/phase-2-remaing`. Working tree con cambios sin commitear
+      (CI/CD en curso).
+   - **Refactorización completa (C2–C8):** mergeada desde `refactor/code-quality` a `main`
+      (commit `172668a`). C1 (TypeScript) descartada por decisión del usuario.
+   - **Auditoría de ciberseguridad completada y mergeada** (07/09/2026).
+   - **Tareas pendientes (nueva rama `feat/phase-2-remaing`, por orden de prioridad):**
+      f) CI/CD (lint + build automáticos) → **en curso**
+      e) Tests (TDD / browser-testing) → pendiente
+      d) Rendimiento (Core Web Vitals, bundle JS) → pendiente
+      g) Observabilidad (analytics, logging) → pendiente
+      h) Checklist de lanzamiento → pendiente
 
 ---
 
 **Nota final de esta sesión:** refactorización C2-C8 completada y pusheada en
 `refactor/code-quality`. C1 (TypeScript) descartada. Auditoría de ciberseguridad
 completada con remediación (sendForm → send, maxLength, cooldown 30s, vercel.json
-con 5 security headers). Pendientes de fase 2: rendimiento, tests, CI/CD,
-observabilidad, checklist.
+con 5 security headers). Nueva rama `feat/phase-2-remaing` para las tareas restantes,
+empezando por CI/CD.
 
 ## Últimos cambios
 
 <!-- Añadir aquí las nuevas entradas (la más reciente primero). -->
+
+### 07/09/2026 — Fase 2f: CI/CD en GitHub Actions en `feat/phase-2-remaing`
+
+Nuevo flujo `.github/workflows/ci.yml` que se ejecuta en cada push/PR a `main`:
+
+1. `npm ci` (dependencias exactas desde `package-lock.json`)
+2. `format:check` (Prettier — falla si hay código sin formatear)
+3. `lint` (ESLint)
+4. `build` de producción (Vite)
+5. Upload del artefacto `dist/`
+
+Node 22, timeout 10 min, cache de npm. El workflow valida que `main` nunca acepte
+código que no formatee/lintee/compile. Los tests de Playwright (fase 2e) se añadirán
+a este mismo workflow cuando existan.
+
+**Extra:** Prettier había quedado pendiente en `src/components/ContactSection.jsx`
+(la línea del toast de longitud de mensaje) — formateada.
 
 ### 07/09/2026 — Refactorización Fase 8 (Documentación — C5) en `refactor/code-quality`
 
