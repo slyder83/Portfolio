@@ -19,17 +19,12 @@ Para retomar la sesión desde donde lo dejamos:
    consulta cambios.md para el contexto»).
 
 4. **Estado actual / punto de retomada:**
-   - **Rama de git:** `feat/phase-2-improvements` (nueva rama desde `main` tras el merge
-     del PR de fase 1). El working tree quedó limpio.
-   - **Fase 1 completada y mergeada a `main`:** corrección de fallos visuales/funcionales;
-      ThemeToggle, imágenes con dimensiones, skip navigation, header semántico, enlace
-      roto, contraste WCAG, og:image, imágenes a WebP.
-   - **Fase 2 en curso:** mejoras adicionales basadas en skills disponibles.
-   - **Tareas fase 2 (orden):**
-   a) Verificar producción tras deploy → completada (error EmailJS detectado y resuelto
-         reconectando Gmail en EmailJS; mejora de toast de error implementada).
-      b) Revisión de código multi-eje (code-review-and-quality) → completada.
-      c) Seguridad (npm audit, EmailJS) → completada (0 vulnerabilidades, revisados secrets y XSS).
+   - **Rama de git:** `refactor/code-quality`. Working tree con cambios sin commitear
+      (auditoría ciberseguridad + vercel.json + mejoras formulario).
+   - **Refactorización completa (C2–C8):** fases 1-8 todas pusheadas en `refactor/code-quality`
+      (commits `07fb828`–`95a86c1`). C1 (TypeScript) descartada por decisión del usuario.
+   - **Auditoría de ciberseguridad completada** (07/09/2026).
+   - **Tareas pendientes de `cambios.md`:**
       d) Rendimiento (Core Web Vitals, bundle JS).
       e) Tests (TDD / browser-testing).
       f) CI/CD (lint + build automáticos).
@@ -38,11 +33,11 @@ Para retomar la sesión desde donde lo dejamos:
 
 ---
 
-**Nota final de esta sesión:** el trabajo de la fase 1 está mergeado en `main` y
-desplegado. La fase 2 está en curso en la rama `feat/phase-2-improvements`.
-Completadas: a) verificación producción, b) revisión de código, c) seguridad
-(0 vulnerabilidades tras `npm audit fix`). Working tree con cambios sin commitear
-(revisión de código + seguridad).
+**Nota final de esta sesión:** refactorización C2-C8 completada y pusheada en
+`refactor/code-quality`. C1 (TypeScript) descartada. Auditoría de ciberseguridad
+completada con remediación (sendForm → send, maxLength, cooldown 30s, vercel.json
+con 5 security headers). Pendientes de fase 2: rendimiento, tests, CI/CD,
+observabilidad, checklist.
 
 ## Últimos cambios
 
@@ -75,6 +70,62 @@ y a un dark mode "pendiente" que ya está publicado.
 
 **Validación:** referencias `portfolioData`/`cosmic-button`/`Vite 7` eliminadas (solo quedan
 en changelogs documentando el propio cambio). Sin cambios de código → lint/build intactos.
+
+---
+
+### 07/09/2026 — Auditoría de ciberseguridad (profundizada)
+
+Auditoría completa solicitada por el usuario. Superficie de ataque mínima: SPA estático
+en Vercel, sin backend, sin auth, sin uploads, sin cookies de sesión. Riesgo global: **bajo**.
+
+**Controles ya sólidos (sin acción necesaria):**
+| Control | Resultado |
+|---------|-----------|
+| Dependencias npm | 0 vulnerabilidades (`npm audit`); 168 paquetes con firma, 46 con attestations |
+| `.env` en git | NO trackeado; `.env.example` con placeholders |
+| Historial git | Sin secretos en formato conocido (tokens, API keys, etc.) |
+| XSS | Sin `dangerouslySetInnerHTML`/`eval`/`innerHTML`; React auto-escapa |
+| HSTS | Presente en producción (Vercel, `max-age=63072000; includeSubDomains; preload`) |
+| Typosquatting | Sin paquetes sospechosos en la dependencia tree |
+| `noopener noreferrer` | Presente en todos los enlaces externos |
+| CV/archivos públicos | Intencional (portfolio); no hay archivos sensibles |
+| Backend | No existe (`api/` vacío, `vercel.json` no existía antes de la auditoría) |
+
+**Hallazgo 1 — Formulario abusable (severidad: media):**
+- `sendForm` serializaba **cualquier campo del DOM** → un atacante podía inyectar campos
+  ocultos y controlar parámetros del template EmailJS (enviar correos usando la cuenta
+  del dueño como spam).
+- Sin `maxLength` en campos → payloads ilimitados.
+- Sin cooldown → envíos repetidos ilimitados.
+
+**Acción realizada:**
+1. `sendForm` → `emailjs.send` con payload explícito `{ name, email, message }`
+   (nunca tocar el DOM del form para enviar).
+2. Añadido `minLength`/`maxLength` en cliente: `name` (2–100), `email` (≤254),
+   `message` (10–5000).
+3. Cooldown de 30s entre envíos (toasts informativos en español).
+
+**Hallazgo 2 — Cabeceras de seguridad deseadas ausentes (severidad: media):**
+Producción sin `Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options`,
+`Referrer-Policy` ni `Permissions-Policy`. HSTS sí estaba presente (Vercel por defecto).
+
+**Acción realizada:** creado `vercel.json` con las 5 cabeceras (CSP incluye
+`connect-src ... https://api.emailjs.com` y `style-src ... 'unsafe-inline'` para
+estilos inline de React; `frame-ancestors 'none'`, `base-uri 'self'`,
+`upgrade-insecure-requests`).
+
+**Mejoras menores implementadas:**
+- Validación client-side con regex de email + comprobación de longitudes en `handleSubmit`.
+- Botón deshabilitado durante envío (`isSubmitting`); cooldown de 30s entre envíos.
+
+**Pendiente (recomendado):** configurar en el dashboard de EmailJS el **Spam Protection**
+(Turnstile/reCAPTCHA o allowlist de dominios) para refuerzo server-side. El frontend
+no puede prevenir abusos 100%; la protección real está en el rate-limit del servicio.
+
+**Validación:** lint ✅ · build ✅ · Playwright: `maxLength` aplicados (100/254/5000),
+form envía por `emailjs.send` (no `sendForm`), 0 errores de consola ·
+`vercel.json` JSON válido ✅ · headers verificados con `curl` en producción (HSTS sí,
+las 5 nuevas se aplicarán al próximo deploy).
 
 ---
 

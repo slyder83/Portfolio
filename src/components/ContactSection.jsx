@@ -10,16 +10,63 @@ export const ContactSection = () => {
     const { toast } = useToast()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const formRef = useRef()
+    const lastSentAt = useRef(0)
 
     const handleSubmit = (e) => {
         e.preventDefault()
+
+        const formData = new FormData(formRef.current)
+        const name = String(formData.get("name") ?? "").trim()
+        const email = String(formData.get("email") ?? "").trim()
+        const message = String(formData.get("message") ?? "").trim()
+
+        const elapsed = Date.now() - lastSentAt.current
+        const cooldownMs = 30000
+        if (elapsed < cooldownMs) {
+            const seconds = Math.ceil((cooldownMs - elapsed) / 1000)
+            toast({
+                title: "Espera un momento",
+                description: `Puedes volver a enviar en ${seconds} segundos.`,
+                variant: "destructive",
+            })
+            return
+        }
+
+        if (name.length < 2 || name.length > 100) {
+            toast({
+                title: "Nombre no válido",
+                description: "El nombre debe tener entre 2 y 100 caracteres.",
+                variant: "destructive",
+            })
+            return
+        }
+
+        if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            toast({
+                title: "Correo no válido",
+                description: "Introduce una dirección de correo válida.",
+                variant: "destructive",
+            })
+            return
+        }
+
+        if (message.length < 10 || message.length > 5000) {
+            toast({
+                title: "Mensaje no válido",
+                description: "El mensaje debe tener entre 10 y 5000 caracteres.",
+                variant: "destructive",
+            })
+            return
+        }
+
+        lastSentAt.current = Date.now()
         setIsSubmitting(true)
 
         emailjs
-            .sendForm(
+            .send(
                 import.meta.env.VITE_EMAILJS_SERVICE_ID,
                 import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-                formRef.current,
+                { name, email, message },
                 import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
             )
             .then(() => {
@@ -138,6 +185,8 @@ export const ContactSection = () => {
                                     name="name"
                                     placeholder="Introduce tu nombre"
                                     className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                                    minLength={2}
+                                    maxLength={100}
                                     required
                                 />
                             </div>
@@ -155,6 +204,7 @@ export const ContactSection = () => {
                                     name="email"
                                     placeholder="Introduce tu correo electrónico"
                                     className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                                    maxLength={254}
                                     required
                                 />
                             </div>
@@ -172,6 +222,8 @@ export const ContactSection = () => {
                                     placeholder="Escribe tu mensaje aquí"
                                     className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary resize-none"
                                     rows={5}
+                                    minLength={10}
+                                    maxLength={5000}
                                     required
                                 />
                             </div>
